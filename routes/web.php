@@ -7,6 +7,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\customer\DebugController;
 use App\Http\Controllers\customer\ArticleController;
 use App\Http\Controllers\customer\ProductController;
+use App\Http\Controllers\ChatbotController;
+Route::get('/debug-models', [App\Http\Controllers\ChatbotController::class, 'checkModels']);
 
 // =====================
 // INCLUDE ROLE-BASED ROUTES
@@ -40,3 +42,4 @@ if (app()->environment('local')) {
 Route::get('/artikel', [ArticleController::class, 'index'])->name('articles.index');
 Route::get('/artikel/{id}', [ArticleController::class, 'show'])->name('articles.show');
 Route::get('/product/{id}', [ProductController::class, 'detail'])->name('product.detail');
+Route::post('/chatbot/ask', [ChatbotController::class, 'handleChat'])->name('chatbot.ask');

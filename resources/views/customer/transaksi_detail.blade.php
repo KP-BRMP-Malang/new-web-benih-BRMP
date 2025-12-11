@@ -720,15 +720,16 @@
                         </a>
                     </div>
                 @endif
+                 <div class="no-payment">
+                    <strong>Alasan Penolakan:</strong><br>
+                    {!! nl2br($latestPayment->rejection_reason) !!}
+                </div>
             @elseif(!$hasPayments && !$hasKodeBilling)
                 <div class="no-payment">
                     ⚠️ Belum ada pembayaran untuk transaksi ini. Silakan tunggu kode billing dari admin.
                 </div>
             @elseif($rejectedPayments)
-                <div class="no-payment">
-                    <strong>Alasan Penolakan:</strong><br>
-                    {!! nl2br($latestPayment->rejection_reason) !!}
-                </div>
+               
             @endif
             @if ($showBillingForm || $showOngkirForm)
                 <div class="payment-instructions">
@@ -829,3 +830,4 @@
         </div>
     </div>
 @endsection
+
