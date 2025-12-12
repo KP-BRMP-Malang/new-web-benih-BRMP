@@ -73,11 +73,19 @@ class ChatbotController extends Controller
         1. Extract the main plant/product 'keyword' (e.g., 'tembakau', 'wijen'). If none, set null.
            - Keyword must be ALPHANUMERIC ONLY (letters, numbers, spaces)
            - Remove any special characters from keyword
-        2. Identify 'intent': 'search' (buying/stock), 'knowledge' (how to plant), 'chat' (greetings).
+        2. Identify 'intent': 
+           - 'search' (buying/stock produk benih)
+           - 'article' (mencari artikel/tutorial/cara menanam/tips budidaya)
+           - 'faq' (pertanyaan tentang pemesanan, pembayaran, pengiriman, tentang BRMP, layanan)
+           - 'knowledge' (pertanyaan umum tentang tanaman)
+           - 'chat' (greetings/obrolan)
         3. Generate 'reply_text' (Bahasa Indonesia):
-           - IMPORTANT: NEVER mention specific product names, varieties, or prices in your text reply because you don't know the live stock.
-           - Instead, say generic things like: 'Berikut adalah stok [keyword] yang tersedia:' or 'Kami memiliki varietas [keyword] unggulan:'.
-           - If intent is 'knowledge', explain briefly about the plant.
+           - For 'search': say 'Berikut adalah stok [keyword] yang tersedia:' 
+           - For 'article': say 'Berikut artikel tentang [keyword]:' or 'Saya temukan panduan tentang [keyword]:'
+           - For 'faq': say 'Berikut informasi yang Anda butuhkan:' or 'Saya akan bantu menjawab pertanyaan Anda:'
+           - For 'knowledge': explain briefly about the plant
+           - For 'chat': friendly response
+           - IMPORTANT: NEVER mention specific product names, varieties, or prices
            - NEVER include HTML tags, scripts, or code in reply_text
         
         RETURN JSON ONLY: {'keyword': string|null, 'intent': string, 'reply_text': string}
@@ -153,7 +161,50 @@ class ChatbotController extends Controller
                 'message' => $aiReply,
                 'data' => []
             ];
+        } elseif ($intent === 'faq') {
+            // --- HANDLE FAQ INTENT ---
+            $faqs = [];
+            if ($keyword) {
+                $faqs = $this->queryFaqs($keyword);
+            }
+
+            if (count($faqs) > 0) {
+                $finalResponse = [
+                    'status' => 'found',
+                    'type' => 'faq',
+                    'message' => $aiReply,
+                    'data' => $faqs
+                ];
+            } else {
+                $finalResponse = [
+                    'status' => 'not_found',
+                    'message' => "Mohon maaf, saya tidak menemukan informasi terkait. Silakan hubungi customer service kami.",
+                    'data' => []
+                ];
+            }
+        } elseif ($intent === 'article') {
+            // --- HANDLE ARTICLE INTENT ---
+            $articles = [];
+            if ($keyword) {
+                $articles = $this->queryArticles($keyword);
+            }
+
+            if (count($articles) > 0) {
+                $finalResponse = [
+                    'status' => 'found',
+                    'type' => 'article',
+                    'message' => $aiReply,
+                    'data' => $articles
+                ];
+            } else {
+                $finalResponse = [
+                    'status' => 'not_found',
+                    'message' => "Mohon maaf, belum ada artikel tentang '{$keyword}'.",
+                    'data' => []
+                ];
+            }
         } else {
+            // --- HANDLE SEARCH/KNOWLEDGE INTENT ---
             $products = [];
             if ($keyword) {
                 $products = $this->queryProducts($keyword);
@@ -162,15 +213,28 @@ class ChatbotController extends Controller
             if (count($products) > 0) {
                 $finalResponse = [
                     'status' => 'found',
+                    'type' => 'product',
                     'message' => $aiReply,
                     'data' => $products
                 ];
             } elseif ($intent === 'knowledge') {
-                $finalResponse = [
-                    'status' => 'success',
-                    'message' => $aiReply . "\n\n(Stok benih terkait belum tersedia di katalog kami).",
-                    'data' => []
-                ];
+                // Knowledge intent: coba cari artikel sebagai tambahan
+                $articles = $keyword ? $this->queryArticles($keyword) : [];
+                
+                if (count($articles) > 0) {
+                    $finalResponse = [
+                        'status' => 'success',
+                        'type' => 'article',
+                        'message' => $aiReply . "\n\nBerikut artikel terkait yang mungkin membantu:",
+                        'data' => $articles
+                    ];
+                } else {
+                    $finalResponse = [
+                        'status' => 'success',
+                        'message' => $aiReply . "\n\n(Stok benih terkait belum tersedia di katalog kami).",
+                        'data' => []
+                    ];
+                }
             } else {
                 $finalResponse = [
                     'status' => 'not_found',
@@ -184,6 +248,74 @@ class ChatbotController extends Controller
         Cache::put($cacheKey, $finalResponse, 86400);
 
         return response()->json($finalResponse);
+    }
+
+    private function queryFaqs($keyword)
+    {
+        $faqs = DB::table('faqs')
+            ->select('id', 'question', 'answer', 'category')
+            ->where('is_active', true)
+            ->where(function($query) use ($keyword) {
+                $query->where('question', 'LIKE', "%{$keyword}%")
+                      ->orWhere('answer', 'LIKE', "%{$keyword}%")
+                      ->orWhere('keywords', 'LIKE', "%{$keyword}%");
+            })
+            ->orderBy('order')
+            ->limit(3) // Max 3 FAQ results
+            ->get();
+
+        return $faqs->map(function($item) {
+            // Format category label
+            $categoryLabels = [
+                'order' => 'Pemesanan',
+                'payment' => 'Pembayaran',
+                'delivery' => 'Pengiriman',
+                'about' => 'Tentang BRMP',
+                'general' => 'Umum'
+            ];
+
+            return [
+                'question' => $item->question,
+                'answer' => $item->answer,
+                'category' => $categoryLabels[$item->category] ?? 'Informasi'
+            ];
+        });
+    }
+
+    private function queryArticles($keyword)
+    {
+        $articles = DB::table('articles')
+            ->select('id', 'headline', 'body', 'image', 'created_at')
+            ->where('headline', 'LIKE', "%{$keyword}%")
+            ->orWhere('body', 'LIKE', "%{$keyword}%")
+            ->orderBy('created_at', 'DESC')
+            ->limit(5)
+            ->get();
+
+        return $articles->map(function($item) {
+            $imagePath = trim($item->image ?? '');
+            $imageUrl = asset('images/placeholder.png');
+            
+            if ($imagePath) {
+                if (str_contains($imagePath, 'articles/')) {
+                    $imageUrl = asset('storage/' . $imagePath);
+                } else {
+                    $imageUrl = asset('storage/articles/' . $imagePath);
+                }
+            }
+
+            // Create excerpt from body (first 150 chars)
+            $body = strip_tags($item->body);
+            $excerpt = strlen($body) > 150 ? substr($body, 0, 150) . '...' : $body;
+
+            return [
+                'title' => $item->headline,
+                'excerpt' => $excerpt,
+                'image_url' => $imageUrl,
+                'link' => url('/artikel/' . $item->id),
+                'date' => date('d M Y', strtotime($item->created_at))
+            ];
+        });
     }
 
     private function queryProducts($keyword)
@@ -235,12 +367,35 @@ class ChatbotController extends Controller
         $sanitizedMessage = preg_replace('/[^a-zA-Z0-9\s]/', '', $originalMessage);
         $sanitizedMessage = trim(substr($sanitizedMessage, 0, 100));
         
+        // Try products first
         $products = $this->queryProducts($sanitizedMessage);
         
-        $response = count($products) > 0 
-            ? ['status' => 'found', 'message' => "Berikut produk yang ditemukan:", 'data' => $products]
-            : ['status' => 'not_found', 'message' => "Maaf, produk tidak ditemukan.", 'data' => []];
-
-        return response()->json($response);
+        if (count($products) > 0) {
+            return response()->json([
+                'status' => 'found',
+                'type' => 'product',
+                'message' => "Berikut produk yang ditemukan:",
+                'data' => $products
+            ]);
+        }
+        
+        // If no products, try articles
+        $articles = $this->queryArticles($sanitizedMessage);
+        
+        if (count($articles) > 0) {
+            return response()->json([
+                'status' => 'found',
+                'type' => 'article',
+                'message' => "Berikut artikel yang ditemukan:",
+                'data' => $articles
+            ]);
+        }
+        
+        // Nothing found
+        return response()->json([
+            'status' => 'not_found',
+            'message' => "Maaf, tidak ditemukan produk atau artikel terkait.",
+            'data' => []
+        ]);
     }
 }

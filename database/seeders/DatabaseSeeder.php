@@ -19,7 +19,8 @@ class DatabaseSeeder extends Seeder
             ProductSeeder::class,
             RegProvincesSeeder::class,
             RegRegenciesSeeder::class,
-            ArticleSeeder::class
+            ArticleSeeder::class,
+            FaqSeeder::class,
         ]);
     }
 }
