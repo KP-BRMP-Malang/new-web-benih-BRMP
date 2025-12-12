@@ -42,4 +42,8 @@ if (app()->environment('local')) {
 Route::get('/artikel', [ArticleController::class, 'index'])->name('articles.index');
 Route::get('/artikel/{id}', [ArticleController::class, 'show'])->name('articles.show');
 Route::get('/product/{id}', [ProductController::class, 'detail'])->name('product.detail');
-Route::post('/chatbot/ask', [ChatbotController::class, 'handleChat'])->name('chatbot.ask');
+
+// CHATBOT ROUTE - Rate Limited: 20 requests per minute per IP
+Route::post('/chatbot/ask', [ChatbotController::class, 'handleChat'])
+    ->middleware('throttle:20,1')
+    ->name('chatbot.ask');

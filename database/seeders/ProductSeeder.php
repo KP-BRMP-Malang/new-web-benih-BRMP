@@ -18,7 +18,7 @@ class ProductSeeder extends Seeder
             [
                 'product_name' => 'Tembakau Kemloko 2 (Dasar)',
                 'plant_type_id' => 1, 
-                'description' => 'Benih tembakau Kemloko 2 (Dasar) merupakan varietas unggulan yang dikenal memiliki aroma kuat dan cita rasa khas. Cocok ditanam di lahan tropis dengan ketinggian sedang hingga tinggi. Daunnya lebar dan tebal, ideal untuk produksi tembakau berkualitas tinggi. Varietas ini menunjukkan ketahanan yang baik terhadap beberapa penyakit umum pada tembakau dan memiliki potensi hasil panen yang memuaskan.',
+                'description' => 'Benih tembakau Kemloko 2 (Dasar) merupakan varietas unggulan yang dikenal memiliki aroma kuat dan cita rasa khas.\n\n**Spesifikasi Teknis:**\n- Umur Panen: 85-110 HST\n- Potensi Hasil: 1.5-2.5 ton/ha (daun kering)\n- Rekomendasi Dataran: Menengah–Tinggi (mdpl)\n- Ketahanan: Moderat terhadap Layu Bakteri; rentan terhadap Wereng pada musim basah\n- Kualitas: Nikotin sedang-tinggi; daun lebar dan tebal, cocok untuk campuran kretek dan pengeringan tradisional.',
                 'minimum_stock' => 10,
                 'stock' => 100,
                 'unit' => 'gr',
@@ -31,7 +31,7 @@ class ProductSeeder extends Seeder
             [
                 'product_name' => 'Tembakau Kemloko 3 (Dasar)',
                 'plant_type_id' => 1, 
-                'description' => 'Varietas Tembakau Kemloko 3 (Dasar) adalah pilihan tepat untuk petani yang mencari kualitas dan kuantitas. Tanaman ini memiliki pertumbuhan yang cepat dan seragam, serta menghasilkan daun yang lebih banyak dibandingkan varietas Kemloko lainnya. Benih tembakau ini unggul, cocok untuk lahan tropis. Daunnya lebar dan tebal, sangat cocok untuk pembuatan rokok kretek. Memiliki ketahanan yang baik terhadap kekeringan dan dapat tumbuh optimal di berbagai kondisi tanah. Keunggulan utamanya adalah rasa dan aroma yang lebih lembut, menjadikannya favorit di pasar.',
+                'description' => 'Varietas Tembakau Kemloko 3 (Dasar) adalah pilihan tepat untuk petani yang mencari kualitas dan kuantitas.\n\n**Spesifikasi Teknis:**\n- Umur Panen: 80-105 HST\n- Potensi Hasil: 1.6-2.8 ton/ha (daun kering)\n- Rekomendasi Dataran: Menengah (mdpl)\n- Ketahanan: Baik terhadap kekeringan; sensitif terhadap serangan kutu daun dan wereng jika kelembapan tinggi\n- Kualitas: Nikotin sedang; aroma lebih lembut, daun seragam cocok untuk proses sortasi industri.',
                 'minimum_stock' => 10,
                 'stock' => 100,
                 'unit' => 'gr',
@@ -44,7 +44,7 @@ class ProductSeeder extends Seeder
             [
                 'product_name' => 'Tembakau Bligon 1 (Dasar)',
                 'plant_type_id' => 1, 
-                'description' => 'Tembakau Bligon 1 (Dasar) dikenal karena ketahanannya yang luar biasa dan adaptasi yang baik terhadap iklim. Varietas ini menghasilkan daun dengan kandungan nikotin sedang, memberikan rasa seimbang yang disukai banyak konsumen. Benih tembakau ini sangat unggul untuk perkebunan di lahan tropis. Tanaman ini memiliki daun yang lebar dan tebal, sangat cocok untuk bahan baku rokok berkualitas. Selain itu, tembakau ini dikenal memiliki aroma yang harum dan cita rasa yang unik.',
+                'description' => 'Tembakau Bligon 1 (Dasar) dikenal karena ketahanannya yang luar biasa dan adaptasi yang baik terhadap iklim.\n\n**Spesifikasi Teknis:**\n- Umur Panen: 90-120 HST\n- Potensi Hasil: 1.4-2.2 ton/ha (daun kering)\n- Rekomendasi Dataran: Rendah–Menengah (mdpl)\n- Ketahanan: Baik terhadap beberapa penyakit jamur; rentan terhadap serangan kutu tembakau pada musim kering\n- Kualitas: Nikotin sedang; aroma harum dan tekstur daun tebal, cocok untuk rokok kualitas menengah-atas.',
                 'minimum_stock' => 10,
                 'stock' => 100,
                 'unit' => 'gr',
@@ -57,7 +57,7 @@ class ProductSeeder extends Seeder
             [
                 'product_name' => 'Tembakau H 382 T2 Agribun (Dasar)',
                 'plant_type_id' => 1, 
-                'description' => 'Tembakau H 382 T2 Agribun adalah varietas unggulan yang dikembangkan untuk menghasilkan daun dengan kualitas terbaik. Tembakau ini memiliki tekstur daun yang halus dan aroma yang ringan, cocok untuk tembakau linting atau rokok kretek mild. Tanaman ini tumbuh subur di dataran rendah dan menengah, serta memiliki ketahanan terhadap beberapa hama dan penyakit umum. Benih tembakau ini berkualitas tinggi dan cocok untuk industri rokok. Daunnya tipis dan lebar dengan kandungan nikotin rendah. Selain itu, tembakau ini juga memiliki ketahanan terhadap kekeringan.',
+                'description' => 'Tembakau H 382 T2 Agribun adalah varietas unggulan yang dikembangkan untuk menghasilkan daun dengan kualitas terbaik.\n\n**Spesifikasi Teknis:**\n- Umur Panen: 70-95 HST\n- Potensi Hasil: 1.2-2.0 ton/ha (daun kering)\n- Rekomendasi Dataran: Rendah–Menengah (mdpl)\n- Ketahanan: Moderat terhadap kekeringan; relatif tahan terhadap serangan jamur daun biasa\n- Kualitas: Nikotin rendah; daun tipis halus cocok untuk linting dan rokok mild.',
                 'minimum_stock' => 5,
                 'stock' => 80,
                 'unit' => 'gr',
@@ -70,7 +70,7 @@ class ProductSeeder extends Seeder
             [
                 'product_name' => 'Tembakau H 382 T4 Agribun (Dasar)',
                 'plant_type_id' => 1, 
-                'description' => 'Tembakau H 382 T4 Agribun adalah varietas tembakau yang dirancang untuk produktivitas tinggi. Varietas ini menghasilkan daun yang lebih tebal dan berbobot, menjadikannya pilihan ekonomis bagi petani. Benih tembakau ini memiliki potensi panen yang lebih tinggi, cocok untuk perkebunan dengan skala besar. Tanaman ini tumbuh dengan cepat dan memiliki daun lebar yang ideal untuk pengeringan. Aromanya yang kuat dan cita rasa yang khas menjadikannya pilihan populer di pasaran.',
+                'description' => 'Tembakau H 382 T4 Agribun adalah varietas tembakau yang dirancang untuk produktivitas tinggi.\n\n**Spesifikasi Teknis:**\n- Umur Panen: 75-100 HST\n- Potensi Hasil: 1.8-3.0 ton/ha (daun kering)\n- Rekomendasi Dataran: Rendah–Menengah (mdpl)\n- Ketahanan: Baik terhadap beberapa hama umum; waspada terhadap penyakit layu saat kelembapan tinggi\n- Kualitas: Nikotin sedang; daun tebal dengan bobot baik untuk pengeringan industri.',
                 'minimum_stock' => 5,
                 'stock' => 80,
                 'unit' => 'gr',
@@ -83,7 +83,7 @@ class ProductSeeder extends Seeder
             [
                 'product_name' => 'Tembakau H 382 T6 Agribun (Dasar)',
                 'plant_type_id' => 1, 
-                'description' => 'Tembakau H 382 T6 Agribun adalah varietas tembakau yang dikenal karena ketahanan unggulnya terhadap berbagai kondisi lingkungan ekstrem. Tanaman ini dapat tumbuh di tanah yang kurang subur dan tetap menghasilkan daun berkualitas. Benih tembakau ini memiliki daya tahan yang tinggi terhadap penyakit dan hama, sehingga sangat cocok untuk penanaman di berbagai daerah. Daunnya tebal dan kuat, memberikan hasil yang konsisten. Varietas ini dikenal dengan aroma uniknya yang cocok untuk campuran rokok kretek.',
+                'description' => 'Tembakau H 382 T6 Agribun adalah varietas tembakau yang dikenal karena ketahanan unggulnya terhadap berbagai kondisi lingkungan ekstrem.\n\n**Spesifikasi Teknis:**\n- Umur Panen: 80-110 HST\n- Potensi Hasil: 1.6-2.6 ton/ha (daun kering)\n- Rekomendasi Dataran: Rendah–Menengah (mdpl)\n- Ketahanan: Baik terhadap kondisi tanah marginal dan beberapa penyakit; tahan relatif terhadap serangan hama skala menengah\n- Kualitas: Nikotin sedang; daun tebal dan kuat cocok sebagai bahan campuran kretek.',
                 'minimum_stock' => 5,
                 'stock' => 80,
                 'unit' => 'gr',
@@ -96,7 +96,7 @@ class ProductSeeder extends Seeder
             [
                 'product_name' => 'Tembakau Semaran Jahe (Dasar)',
                 'plant_type_id' => 1, 
-                'description' => 'Benih ini memiliki ciri khas aroma pedas seperti jahe, menjadikannya pilihan unik bagi para penggemar tembakau. Tanaman ini adaptif terhadap iklim dataran rendah, tumbuh cepat, dan menghasilkan daun dengan tekstur yang renyah setelah dikeringkan. Rasa dan aromanya yang kuat sangat cocok untuk dicampur dengan varietas tembakau lain untuk menciptakan blend yang unik.',
+                'description' => 'Benih ini memiliki ciri khas aroma pedas seperti jahe, menjadikannya pilihan unik bagi para penggemar tembakau.\n\n**Spesifikasi Teknis:**\n- Umur Panen: 70-95 HST\n- Potensi Hasil: 1.0-1.8 ton/ha (daun kering)\n- Rekomendasi Dataran: Rendah (mdpl)\n- Ketahanan: Adaptif; rentan terhadap jamur daun jika kelembapan tinggi\n- Kualitas: Aroma pedas tinggi; tekstur renyah setelah dikeringkan, cocok untuk campuran aroma khusus.',
                 'minimum_stock' => 8,
                 'stock' => 60,
                 'unit' => 'gr',
@@ -109,7 +109,7 @@ class ProductSeeder extends Seeder
             [
                 'product_name' => 'Tembakau Jepril 1 (Dasar)',
                 'plant_type_id' => 1, 
-                'description' => 'Tembakau Jepril 1 (Dasar) merupakan varietas yang sangat populer di kalangan petani karena kemudahannya dalam budidaya dan hasil panen yang melimpah. Benih tembakau ini sangat unggul dan cocok untuk perkebunan. Tanaman ini memiliki daun lebar dan pertumbuhan cepat. Tembakau ini memiliki aroma yang harum dan cita rasa yang manis, sehingga cocok untuk bahan baku rokok berkualitas. Kualitas daunnya yang konsisten membuatnya diminati oleh industri.',
+                'description' => 'Tembakau Jepril 1 (Dasar) merupakan varietas yang sangat populer di kalangan petani karena kemudahannya dalam budidaya dan hasil panen yang melimpah.\n\n**Spesifikasi Teknis:**\n- Umur Panen: 80-110 HST\n- Potensi Hasil: 1.8-3.0 ton/ha (daun kering)\n- Rekomendasi Dataran: Rendah–Menengah (mdpl)\n- Ketahanan: Tahan relatif terhadap beberapa hama umum; waspada terhadap penyakit jamur pada musim basah\n- Kualitas: Aroma harum dan cita rasa manis; daun lebar cocok untuk industri rokok kretek.',
                 'minimum_stock' => 3,
                 'stock' => 40,
                 'unit' => 'gr',
@@ -122,7 +122,7 @@ class ProductSeeder extends Seeder
             [
                 'product_name' => 'Tembakau Jinten Pak Pie 2 (Dasar)',
                 'plant_type_id' => 1, 
-                'description' => 'Benih tembakau ini adalah varietas unik dengan aroma khas seperti jintan. Tanaman ini menghasilkan daun yang lebih kecil namun memiliki kandungan minyak atsiri yang tinggi, memberikan cita rasa yang sangat intens. Sangat cocok untuk pasar niche atau campuran tembakau premium. Varietas ini juga dikenal karena ketahanannya terhadap hama tertentu.',
+                'description' => 'Benih tembakau ini adalah varietas unik dengan aroma khas seperti jintan.\n\n**Spesifikasi Teknis:**\n- Umur Panen: 75-100 HST\n- Potensi Hasil: 0.9-1.6 ton/ha (daun kering)\n- Rekomendasi Dataran: Rendah–Menengah (mdpl)\n- Ketahanan: Baik terhadap beberapa hama; rentan terhadap kelembapan tinggi yang meningkatkan resiko jamur\n- Kualitas: Minyak atsiri tinggi; daun kecil dengan citarasa intens untuk campuran premium.',
                 'minimum_stock' => 3,
                 'stock' => 40,
                 'unit' => 'gr',
@@ -135,7 +135,7 @@ class ProductSeeder extends Seeder
             [
                 'product_name' => 'Tembakau Bojonegoro 1 (Dasar)',
                 'plant_type_id' => 1, 
-                'description' => 'Tembakau Bojonegoro 1 (Dasar) adalah salah satu varietas tembakau terkemuka dari wilayah Bojonegoro. Benih tembakau ini sangat unggul dan cocok untuk perkebunan. Tanaman ini memiliki daun yang lebar dan tebal, cocok untuk bahan baku rokok kretek. Tembakau ini memiliki cita rasa yang kuat, menjadikannya pilihan favorit untuk rokok tradisional. Tumbuh optimal di tanah liat berpasir dan iklim panas.',
+                'description' => 'Tembakau Bojonegoro 1 (Dasar) adalah salah satu varietas tembakau terkemuka dari wilayah Bojonegoro.\n\n**Spesifikasi Teknis:**\n- Umur Panen: 85-115 HST\n- Potensi Hasil: 1.6-2.7 ton/ha (daun kering)\n- Rekomendasi Dataran: Rendah (mdpl); tanah liat berpasir sangat sesuai\n- Ketahanan: Moderat terhadap kondisi panas; rentan terhadap hama wereng pada fase vegetatif\n- Kualitas: Nikotin sedang-tinggi; daun tebal dan cita rasa kuat cocok untuk rokok tradisional.',
                 'minimum_stock' => 3,
                 'stock' => 40,
                 'unit' => 'gr',
@@ -148,7 +148,7 @@ class ProductSeeder extends Seeder
             [
                 'product_name' => 'Tembakau Prancak 95 (Dasar)',
                 'plant_type_id' => 1, 
-                'description' => 'Tembakau Prancak 95 (Dasar) adalah varietas yang telah teruji dan populer sejak lama. Benih tembakau ini unggul untuk perkebunan di lahan tropis. Tanaman ini memiliki daun yang lebar dan tekstur yang tebal, menjadikannya ideal untuk industri rokok. Cita rasanya yang seimbang dan aromanya yang khas membuat tembakau ini sangat disukai. Varietas ini juga memiliki ketahanan yang baik terhadap penyakit layu bakteri.',
+                'description' => 'Tembakau Prancak 95 (Dasar) adalah varietas yang telah teruji dan populer sejak lama.\n\n**Spesifikasi Teknis:**\n- Umur Panen: 90-120 HST\n- Potensi Hasil: 1.5-2.5 ton/ha (daun kering)\n- Rekomendasi Dataran: Menengah (mdpl)\n- Ketahanan: Baik terhadap Layu Bakteri; perhatian untuk serangan jamur daun pada musim basah\n- Kualitas: Nikotin sedang; daun bertekstur tebal cocok untuk pengolahan skala industri.',
                 'minimum_stock' => 3,
                 'stock' => 40,
                 'unit' => 'gr',
@@ -161,7 +161,7 @@ class ProductSeeder extends Seeder
             [
                 'product_name' => 'Tembakau Kasturi 2 (Dasar)',
                 'plant_type_id' => 1, 
-                'description' => 'embakau Kasturi 2 (Dasar) dikenal dengan aromanya yang sangat kuat dan khas, mirip dengan kasturi. Benih tembakau ini sangat unggul dan cocok untuk perkebunan. Daunnya yang berukuran sedang memiliki kandungan minyak atsiri yang tinggi, menghasilkan rasa yang intens dan unik. Varietas ini sering digunakan sebagai bahan tambahan untuk meningkatkan aroma pada campuran tembakau lain.',
+                'description' => 'embakau Kasturi 2 (Dasar) dikenal dengan aromanya yang sangat kuat dan khas, mirip dengan kasturi.\n\n**Spesifikasi Teknis:**\n- Umur Panen: 75-100 HST\n- Potensi Hasil: 1.0-1.8 ton/ha (daun kering)\n- Rekomendasi Dataran: Rendah–Menengah (mdpl)\n- Ketahanan: Moderat; rentan terhadap jamur jika kelembapan tinggi\n- Kualitas: Minyak atsiri tinggi; aroma kasturi kuat cocok sebagai bahan penguat aroma pada campuran.',
                 'minimum_stock' => 3,
                 'stock' => 40,
                 'unit' => 'gr',
@@ -174,7 +174,7 @@ class ProductSeeder extends Seeder
             [
                 'product_name' => 'Kapas Kanesia 10 (Pokok)',
                 'plant_type_id' => 2, 
-                'description' => 'Kapas Kanesia 10 (Pokok) adalah varietas kapas unggulan yang dikembangkan untuk menghasilkan serat berkualitas tinggi. Benih kapas ini sangat unggul untuk perkebunan di berbagai daerah. Tanaman ini memiliki serat yang kuat dan putih bersih, ideal untuk industri tekstil. Selain itu, kapas ini memiliki ketahanan yang baik terhadap hama dan penyakit umum pada tanaman kapas, serta tumbuh subur di lahan kering.',
+                'description' => 'Kapas Kanesia 10 (Pokok) adalah varietas kapas unggulan yang dikembangkan untuk menghasilkan serat berkualitas tinggi.\n\n**Spesifikasi Teknis:**\n- Umur Panen: 140-170 HST\n- Potensi Hasil: 1.0-1.6 ton/ha serat (lint)\n- Rekomendasi Dataran: Rendah (mdpl)\n- Ketahanan: Baik terhadap hama kutu daun dan beberapa penyakit jamur; toleran lahan kering\n- Kualitas: Serat kuat, warna putih bersih; panjang serat ~28-32 mm, cocok untuk tekstil premium.',
                 'minimum_stock' => 3,
                 'stock' => 40,
                 'unit' => 'kg',
@@ -187,7 +187,7 @@ class ProductSeeder extends Seeder
             [
                 'product_name' => 'Kapas Kanesia 15 (Pokok)',
                 'plant_type_id' => 2, 
-                'description' => 'Kapas Kanesia 15 (Pokok) merupakan varietas kapas hibrida dengan produktivitas tinggi. Benih kapas ini sangat unggul untuk industri tekstil. Tanaman ini menghasilkan serat yang panjang dan halus. Selain itu, kapas ini memiliki ketahanan yang sangat baik terhadap hama, sehingga sangat cocok untuk perkebunan skala besar. Kualitas seratnya yang superior menjadikannya pilihan utama.',
+                'description' => 'Kapas Kanesia 15 (Pokok) merupakan varietas kapas hibrida dengan produktivitas tinggi.\n\n**Spesifikasi Teknis:**\n- Umur Panen: 140-160 HST\n- Potensi Hasil: 1.2-1.8 ton/ha serat (lint)\n- Rekomendasi Dataran: Rendah (mdpl)\n- Ketahanan: Sangat baik terhadap hama utama; toleran terhadap kondisi suboptimal\n- Kualitas: Serat panjang dan halus; panjang serat ~30-34 mm, cocok untuk kain halus dan benang kualitas tinggi.',
                 'minimum_stock' => 3,
                 'stock' => 40,
                 'unit' => 'kg',
@@ -200,7 +200,7 @@ class ProductSeeder extends Seeder
             [
                 'product_name' => 'Kapas Kanesia 16 (Dasar)',
                 'plant_type_id' => 2, 
-                'description' => 'Kapas Kanesia 16 (Dasar) adalah varietas yang dikenal karena ketahanan luar biasanya terhadap kekeringan. Benih kapas ini sangat unggul dan cocok untuk perkebunan di daerah kering. Tanaman ini menghasilkan serat kapas yang tebal dan kuat, ideal untuk produk tekstil yang membutuhkan daya tahan tinggi. Varietas ini juga memiliki tingkat produktivitas yang stabil.',
+                'description' => 'Kapas Kanesia 16 (Dasar) adalah varietas yang dikenal karena ketahanan luar biasanya terhadap kekeringan.\n\n**Spesifikasi Teknis:**\n- Umur Panen: 150-180 HST\n- Potensi Hasil: 0.9-1.5 ton/ha serat (lint)\n- Rekomendasi Dataran: Rendah (mdpl), lahan kering\n- Ketahanan: Tinggi terhadap kekeringan; toleran terhadap beberapa hama penghisap\n- Kualitas: Serat tebal dan kuat; ideal untuk produk tekstil yang membutuhkan durabilitas.',
                 'minimum_stock' => 3,
                 'stock' => 40,
                 'unit' => 'kg',
@@ -213,7 +213,7 @@ class ProductSeeder extends Seeder
             [
                 'product_name' => 'Kapas Kanesia 17 (Dasar)',
                 'plant_type_id' => 2, 
-                'description' => 'Kapas Kanesia 17 (Dasar) adalah varietas kapas yang menghasilkan serat dengan kualitas premium. Benih kapas ini sangat unggul dan cocok untuk perkebunan. Seratnya sangat halus dan panjang, menjadikannya bahan baku ideal untuk kain berkualitas tinggi. Tanaman ini memiliki pertumbuhan yang cepat dan seragam, serta ketahanan yang baik terhadap serangan penyakit. Kualitas ini sangat diminati oleh produsen tekstil.Benih kapas ini sangat unggul dan cocok untuk perkebunan. Seratnya sangat halus dan panjang, menjadikannya bahan baku ideal untuk kain berkualitas tinggi. Tanaman ini memiliki pertumbuhan yang cepat dan seragam, serta ketahanan yang baik terhadap serangan penyakit. Kualitas ini sangat diminati oleh produsen tekstil.',
+                'description' => 'Kapas Kanesia 17 (Dasar) adalah varietas kapas yang menghasilkan serat dengan kualitas premium.\n\n**Spesifikasi Teknis:**\n- Umur Panen: 140-170 HST\n- Potensi Hasil: 1.1-1.9 ton/ha serat (lint)\n- Rekomendasi Dataran: Rendah (mdpl)\n- Ketahanan: Baik terhadap serangan penyakit umum; pertumbuhan seragam mengurangi kehilangan panen\n- Kualitas: Serat sangat halus dan panjang; panjang serat ~31-35 mm, cocok untuk produk tekstil premium.',
                 'minimum_stock' => 3,
                 'stock' => 40,
                 'unit' => 'kg',
@@ -226,7 +226,7 @@ class ProductSeeder extends Seeder
             [
                 'product_name' => 'Kapas Kanesia 18 (Dasar)',
                 'plant_type_id' => 2, 
-                'description' => 'Kapas Kanesia 18 (Dasar) menawarkan kombinasi unik antara produktivitas tinggi dan ketahanan yang kuat. Benih kapas ini sangat unggul untuk perkebunan. Tanaman ini menghasilkan serat kapas dengan panjang medium dan daya serap yang baik, cocok untuk berbagai aplikasi tekstil. Kapas ini juga memiliki ketahanan yang baik terhadap hama dan penyakit, menjadikannya pilihan yang andal untuk petani.',
+                'description' => 'Kapas Kanesia 18 (Dasar) menawarkan kombinasi unik antara produktivitas tinggi dan ketahanan yang kuat.\n\n**Spesifikasi Teknis:**\n- Umur Panen: 135-165 HST\n- Potensi Hasil: 1.0-1.7 ton/ha serat (lint)\n- Rekomendasi Dataran: Rendah–Menengah (mdpl)\n- Ketahanan: Baik terhadap hama dan penyakit umum; adaptif pada lahan marginal\n- Kualitas: Panjang serat medium; daya serap baik, cocok untuk berbagai produk tekstil.',
                 'minimum_stock' => 3,
                 'stock' => 40,
                 'unit' => 'kg',
@@ -239,7 +239,7 @@ class ProductSeeder extends Seeder
             [
                 'product_name' => 'Kapas Kanesia 19 (Pokok)',
                 'plant_type_id' => 2, 
-                'description' => 'Kapas Kanesia 19 (Pokok) adalah varietas kapas yang dirancang untuk menghasilkan serat dengan kekuatan tarik luar biasa. Benih kapas ini sangat unggul untuk perkebunan di lahan tropis. Seratnya sangat kuat dan tidak mudah putus, ideal untuk benang dan kain yang membutuhkan durabilitas tinggi. Tanaman ini juga menunjukkan performa yang stabil di berbagai kondisi cuaca, memberikan hasil panen yang konsisten.',
+                'description' => 'Kapas Kanesia 19 (Pokok) adalah varietas kapas yang dirancang untuk menghasilkan serat dengan kekuatan tarik luar biasa.\n\n**Spesifikasi Teknis:**\n- Umur Panen: 140-170 HST\n- Potensi Hasil: 1.0-1.6 ton/ha serat (lint)\n- Rekomendasi Dataran: Rendah (mdpl)\n- Ketahanan: Stabil di berbagai kondisi; tahan mekanis dan cuaca berubah-ubah\n- Kualitas: Kekuatan tarik tinggi; cocok untuk benang industri dan kain berat.',
                 'minimum_stock' => 3,
                 'stock' => 40,
                 'unit' => 'kg',
@@ -252,7 +252,7 @@ class ProductSeeder extends Seeder
             [
                 'product_name' => 'Kapas Kanesia 20 (Dasar)',
                 'plant_type_id' => 2, 
-                'description' => 'Kapas Kanesia 20 (Dasar) dikenal dengan seratnya yang super putih dan bersih, tanpa banyak kotoran. Benih kapas ini sangat unggul dan cocok untuk perkebunan. Kualitas serat yang tinggi dan kemudahan pemrosesan menjadikan kapas ini sangat diminati di industri tekstil. Tanaman ini tumbuh dengan subur di dataran rendah hingga menengah dan memiliki potensi hasil panen yang sangat memuaskan.',
+                'description' => 'Kapas Kanesia 20 (Dasar) dikenal dengan seratnya yang super putih dan bersih, tanpa banyak kotoran.\n\n**Spesifikasi Teknis:**\n- Umur Panen: 140-165 HST\n- Potensi Hasil: 1.1-1.9 ton/ha serat (lint)\n- Rekomendasi Dataran: Rendah–Menengah (mdpl)\n- Ketahanan: Baik terhadap kontaminasi dan beberapa penyakit; cocok untuk lahan subur\n- Kualitas: Serat sangat putih dan bersih; memudahkan proses pemintalan dan pemutihan industri.',
                 'minimum_stock' => 3,
                 'stock' => 40,
                 'unit' => 'kg',
@@ -265,7 +265,7 @@ class ProductSeeder extends Seeder
             [
                 'product_name' => 'Kapas Kanesia 21(Dasar)',
                 'plant_type_id' => 2, 
-                'description' => 'Kapas Kanesia 21 (Dasar) merupakan varietas kapas yang dirancang untuk efisiensi budidaya. Benih kapas ini sangat unggul dan cocok untuk perkebunan. Tanaman ini memiliki masa panen yang lebih singkat dan hasil panen yang lebih cepat, memaksimalkan rotasi tanam. Serat yang dihasilkan memiliki kualitas standar industri yang baik, cocok untuk berbagai kebutuhan produksi tekstil. Ini adalah pilihan yang sangat praktis bagi petani.',
+                'description' => 'Kapas Kanesia 21 (Dasar) merupakan varietas kapas yang dirancang untuk efisiensi budidaya.\n\n**Spesifikasi Teknis:**\n- Umur Panen: 120-150 HST (lebih singkat dibanding var. lain)\n- Potensi Hasil: 0.9-1.5 ton/ha serat (lint)\n- Rekomendasi Dataran: Rendah (mdpl)\n- Ketahanan: Tahan terhadap beberapa patogen; cocok untuk rotasi cepat\n- Kualitas: Serat kualitas industri standar, cocok untuk produksi massal dengan siklus tanam pendek.',
                 'minimum_stock' => 3,
                 'stock' => 40,
                 'unit' => 'kg',
@@ -278,7 +278,7 @@ class ProductSeeder extends Seeder
             [
                 'product_name' => 'Kapas Kanesia 22(Dasar)',
                 'plant_type_id' => 2, 
-                'description' => 'Kapas Kanesia 22 (Dasar) adalah varietas kapas yang dikenal karena daya tahan dan adaptasinya di lahan marginal. Benih kapas ini sangat unggul dan cocok untuk perkebunan. Tanaman ini dapat tumbuh optimal di tanah yang kurang subur dan membutuhkan sedikit air. Seratnya yang dihasilkan memiliki kekuatan yang baik, menjadikannya pilihan ideal untuk daerah dengan sumber daya terbatas. Varietas ini sangat andal untuk kondisi pertanian yang menantang.',
+                'description' => 'Kapas Kanesia 22 (Dasar) adalah varietas kapas yang dikenal karena daya tahan dan adaptasinya di lahan marginal.\n\n**Spesifikasi Teknis:**\n- Umur Panen: 140-170 HST\n- Potensi Hasil: 0.8-1.4 ton/ha serat (lint)\n- Rekomendasi Dataran: Rendah (mdpl), lahan marginal\n- Ketahanan: Tinggi terhadap kondisi kurang subur dan kekeringan ringan\n- Kualitas: Serat dengan kekuatan baik; cocok untuk produk tekstil kasar dan kinerja tahan lama.',
                 'minimum_stock' => 3,
                 'stock' => 40,
                 'unit' => 'kg',
@@ -291,7 +291,7 @@ class ProductSeeder extends Seeder
             [
                 'product_name' => 'Wijen SBR 1 (Dasar)',
                 'plant_type_id' => 9, 
-                'description' => 'Wijen SBR 1 (Dasar) adalah varietas wijen unggul yang menghasilkan biji wijen berkualitas tinggi dengan kandungan minyak melimpah. Benih wijen ini sangat unggul untuk perkebunan. Tanaman ini memiliki biji yang besar, berwarna putih bersih, dan rasanya yang gurih. Wijen ini ideal untuk produksi minyak wijen, bahan baku makanan, maupun pakan ternak. Pertumbuhannya cepat dan produktivitasnya tinggi, menjadikannya pilihan yang sangat menguntungkan bagi petani.',
+                'description' => 'Wijen SBR 1 (Dasar) adalah varietas wijen unggul yang menghasilkan biji wijen berkualitas tinggi dengan kandungan minyak melimpah.\n\n**Spesifikasi Teknis:**\n- Umur Panen: 90-110 HST\n- Potensi Hasil: 0.6-1.0 ton/ha biji kering\n- Rekomendasi Dataran: Rendah (mdpl)\n- Ketahanan: Baik terhadap penyakit layu; rentan terhadap serangan hama kumbang pada penyimpanan biji\n- Kualitas: Kandungan minyak tinggi (~45-55%); biji besar putih bersih untuk minyak dan pangan.',
                 'minimum_stock' => 3,
                 'stock' => 40,
                 'unit' => 'kg',
@@ -304,7 +304,7 @@ class ProductSeeder extends Seeder
             [
                 'product_name' => 'Wijen SBR 1 (Pokok)',
                 'plant_type_id' => 9, 
-                'description' => 'Wijen SBR 1 (Pokok) merupakan varietas wijen pokok yang stabil dan andal. Benih wijen ini sangat unggul dan cocok untuk perkebunan di berbagai daerah. Tanaman ini menghasilkan biji wijen dengan kualitas premium dan tahan lama. Biji wijen ini memiliki kandungan minyak yang tinggi dan rasa yang sangat lezat, ideal untuk diolah menjadi minyak wijen atau ditambahkan ke hidangan. Selain itu, tanaman ini memiliki daya tahan yang baik terhadap hama dan penyakit.',
+                'description' => 'Wijen SBR 1 (Pokok) merupakan varietas wijen pokok yang stabil dan andal.\n\n**Spesifikasi Teknis:**\n- Umur Panen: 95-115 HST\n- Potensi Hasil: 0.6-0.9 ton/ha biji kering\n- Rekomendasi Dataran: Rendah–Menengah (mdpl)\n- Ketahanan: Stabil terhadap hama dan penyakit umum; simpanan biji sensitif terhadap kelembapan\n- Kualitas: Minyak tinggi (~45-52%); rasa gurih dan biji cocok untuk pangan dan minyak.',
                 'minimum_stock' => 3,
                 'stock' => 40,
                 'unit' => 'kg',
@@ -317,7 +317,7 @@ class ProductSeeder extends Seeder
             [
                 'product_name' => 'Wijen SBR 4 (Pokok)',
                 'plant_type_id' => 9, 
-                'description' => 'Wijen SBR 4 (Pokok) adalah varietas wijen unggul yang dikenal karena kemampuan adaptasinya yang luas. Benih wijen ini sangat unggul untuk perkebunan. Tanaman ini menghasilkan biji wijen yang besar dan berkualitas. Wijen ini dapat tumbuh subur di berbagai jenis tanah, termasuk lahan kering. Biji wijen ini memiliki kandungan minyak yang tinggi, menjadikannya ideal untuk industri minyak dan makanan. Produksi wijen SBR 4 (Pokok) juga stabil dan memberikan hasil yang memuaskan.',
+                'description' => 'Wijen SBR 4 (Pokok) adalah varietas wijen unggul yang dikenal karena kemampuan adaptasinya yang luas.\n\n**Spesifikasi Teknis:**\n- Umur Panen: 90-120 HST\n- Potensi Hasil: 0.5-0.9 ton/ha biji kering\n- Rekomendasi Dataran: Rendah–Menengah (mdpl)\n- Ketahanan: Adaptif terhadap lahan kering; risiko layu berkurang pada rotasi tanam baik\n- Kualitas: Kandungan minyak tinggi (~40-50%); biji besar cocok untuk pengolahan minyak.',
                 'minimum_stock' => 3,
                 'stock' => 40,
                 'unit' => 'kg',
@@ -330,7 +330,7 @@ class ProductSeeder extends Seeder
             [
                 'product_name' => 'Wijen WINAS 1 (Pokok)',
                 'plant_type_id' => 9, 
-                'description' => 'Wijen WINAS 1 (Pokok) adalah varietas wijen lokal yang dikembangkan untuk menghasilkan biji wijen dengan kualitas premium. Benih wijen ini sangat unggul untuk perkebunan. Biji wijen yang dihasilkan sangat besar dan memiliki warna cerah, cocok untuk ekspor. Kandungan minyak wijen ini juga sangat tinggi, sehingga sangat ideal untuk industri makanan. Tanaman ini tumbuh dengan cepat dan memiliki ketahanan yang baik terhadap hama dan penyakit, menjadikan pilihan yang sangat menguntungkan bagi petani.',
+                'description' => 'Wijen WINAS 1 (Pokok) adalah varietas wijen lokal yang dikembangkan untuk menghasilkan biji wijen dengan kualitas premium.\n\n**Spesifikasi Teknis:**\n- Umur Panen: 95-120 HST\n- Potensi Hasil: 0.6-1.0 ton/ha biji kering\n- Rekomendasi Dataran: Rendah (mdpl)\n- Ketahanan: Baik terhadap penyakit lokal; perlu pengendalian serangga saat bunga\n- Kualitas: Biji besar, warna cerah; minyak tinggi untuk ekspor (~45-55%).',
                 'minimum_stock' => 3,
                 'stock' => 40,
                 'unit' => 'kg',
@@ -343,7 +343,7 @@ class ProductSeeder extends Seeder
             [
                 'product_name' => 'Wijen WINAS 2 (Pokok)',
                 'plant_type_id' => 9, 
-                'description' => 'Wijen WINAS 2 (Pokok) dikenal dengan produktivitasnya yang sangat tinggi, cocok untuk petani yang ingin memaksimalkan hasil panen. Benih wijen ini sangat unggul untuk perkebunan. Biji wijen yang dihasilkan memiliki kualitas standar industri yang baik, menjadikannya ideal untuk berbagai kebutuhan. Tanaman ini memiliki masa panen yang lebih cepat dibandingkan varietas wijen lainnya, sehingga dapat memberikan keuntungan lebih bagi petani. Wijen ini juga memiliki ketahanan yang baik terhadap hama.',
+                'description' => 'Wijen WINAS 2 (Pokok) dikenal dengan produktivitasnya yang sangat tinggi, cocok untuk petani yang ingin memaksimalkan hasil panen.\n\n**Spesifikasi Teknis:**\n- Umur Panen: 85-105 HST\n- Potensi Hasil: 0.7-1.2 ton/ha biji kering\n- Rekomendasi Dataran: Rendah (mdpl)\n- Ketahanan: Baik terhadap hama; masa panen lebih cepat mengurangi risiko cuaca buruk\n- Kualitas: Kandungan minyak baik (~42-50%); cocok untuk industri pengolahan massal.',
                 'minimum_stock' => 3,
                 'stock' => 40,
                 'unit' => 'kg',
@@ -356,7 +356,7 @@ class ProductSeeder extends Seeder
             [
                 'product_name' => 'Wijen SBR 3 (Dasar)',
                 'plant_type_id' => 9, 
-                'description' => 'Benih wijen ini dikenal karena daya tahannya yang baik terhadap penyakit layu dan adaptasinya yang luas terhadap berbagai kondisi iklim. Biji wijen yang dihasilkan memiliki kualitas tinggi dengan kandungan minyak yang melimpah, menjadikannya pilihan ideal untuk produksi minyak wijen dan kebutuhan kuliner. Pertumbuhannya yang kuat dan hasil panen yang konsisten membuatnya menjadi pilihan populer di kalangan petani.',
+                'description' => 'Benih wijen ini dikenal karena daya tahannya yang baik terhadap penyakit layu dan adaptasinya yang luas terhadap berbagai kondisi iklim.\n\n**Spesifikasi Teknis:**\n- Umur Panen: 90-115 HST\n- Potensi Hasil: 0.5-0.9 ton/ha biji kering\n- Rekomendasi Dataran: Rendah–Menengah (mdpl)\n- Ketahanan: Baik terhadap layu; adaptif pada iklim berubah-ubah\n- Kualitas: Kandungan minyak tinggi (~45%); biji cocok untuk minyak dan pangan.',
                 'minimum_stock' => 3,
                 'stock' => 40,
                 'unit' => 'kg',
@@ -369,7 +369,7 @@ class ProductSeeder extends Seeder
             [
                 'product_name' => 'Rosela Herbal Roselindo 1 (Pokok)',
                 'plant_type_id' => 5, 
-                'description' => 'Benih rosela ini dikenal karena menghasilkan kelopak bunga berwarna merah cerah dengan kandungan vitamin C dan antioksidan yang sangat tinggi. Sangat cocok untuk diolah menjadi teh herbal, sirup, atau selai. Tanaman ini tumbuh dengan cepat dan memiliki ketahanan yang baik terhadap hama, serta mudah dibudidayakan di berbagai jenis tanah.',
+                'description' => 'Benih rosela ini dikenal karena menghasilkan kelopak bunga berwarna merah cerah dengan kandungan vitamin C dan antioksidan yang sangat tinggi.\n\n**Spesifikasi Teknis:**\n- Umur Panen: 90-120 HST (panen kelopak pertama)\n- Potensi Hasil: 2.0-5.0 ton/ha kelopak basah (1.0-2.5 ton/ha kelopak kering)\n- Rekomendasi Dataran: Rendah–Menengah (mdpl)\n- Ketahanan: Baik terhadap hama daun dan serangan lalat buah; kontrol penyakit jamur disarankan pada musim basah\n- Kualitas: Kandungan vitamin C dan asam organik tinggi; cocok untuk industri minuman dan suplemen.',
                 'minimum_stock' => 3,
                 'stock' => 40,
                 'unit' => 'kg',
@@ -382,7 +382,7 @@ class ProductSeeder extends Seeder
             [
                 'product_name' => 'Rosela Herbal Roselindo 2 (Dasar)',
                 'plant_type_id' => 5, 
-                'description' => 'Benih rosela ini unggul karena menghasilkan kelopak bunga dengan warna merah yang pekat dan rasa asam yang seimbang. Ideal untuk industri makanan dan minuman, serta produk kesehatan. Tanaman ini tumbuh dengan kokoh dan memiliki produktivitas tinggi, memberikan hasil panen yang melimpah. Selain itu, varietas ini dikenal karena ketahanannya terhadap penyakit tertentu.',
+                'description' => 'Benih rosela ini unggul karena menghasilkan kelopak bunga dengan warna merah yang pekat dan rasa asam yang seimbang.\n\n**Spesifikasi Teknis:**\n- Umur Panen: 90-120 HST\n- Potensi Hasil: 2.0-4.5 ton/ha kelopak basah\n- Rekomendasi Dataran: Rendah–Menengah (mdpl)\n- Ketahanan: Tahan relatif terhadap penyakit lokal; pengendalian trips dan kutu diperlukan untuk kualitas optimal\n- Kualitas: Warna pekat dan rasa asam seimbang; cocok untuk teh, sirup, dan ekstrak antioksidan.',
                 'minimum_stock' => 3,
                 'stock' => 40,
                 'unit' => 'kg',
@@ -395,7 +395,7 @@ class ProductSeeder extends Seeder
             [
                 'product_name' => 'Rosela Herbal Roselindo 3 (Dasar)',
                 'plant_type_id' => 5, 
-                'description' => 'Benih rosela ini dikenal karena menghasilkan kelopak bunga yang besar dan tebal, dengan kandungan nutrisi yang sangat baik. Sangat cocok untuk diolah menjadi minuman kesehatan atau suplemen. Tanaman ini memiliki pertumbuhan yang cepat dan adaptasi yang baik di berbagai jenis iklim. Varietas ini juga memiliki ketahanan yang baik terhadap hama dan penyakit.',
+                'description' => 'Benih rosela ini dikenal karena menghasilkan kelopak bunga yang besar dan tebal, dengan kandungan nutrisi yang sangat baik.\n\n**Spesifikasi Teknis:**\n- Umur Panen: 95-125 HST\n- Potensi Hasil: 2.5-5.5 ton/ha kelopak basah\n- Rekomendasi Dataran: Rendah–Menengah (mdpl)\n- Ketahanan: Baik terhadap hama umum; pemangkasan rutin meningkatkan kualitas kelopak\n- Kualitas: Kelopak besar dan tebal, tinggi nutrisi dan antioksidan untuk produk kesehatan.',
                 'minimum_stock' => 3,
                 'stock' => 40,
                 'unit' => 'kg',
@@ -408,7 +408,7 @@ class ProductSeeder extends Seeder
             [
                 'product_name' => 'Rosela Herbal Roselindo 4 (Dasar)',
                 'plant_type_id' => 5, 
-                'description' => 'Rosela Herbal Roselindo 4 (Dasar) adalah varietas rosela unggulan yang dikenal karena kandungan antioksidan alaminya yang sangat tinggi. Benih rosela ini sangat unggul untuk perkebunan. Kelopak bunga yang dihasilkan memiliki warna merah gelap dan rasa yang tajam, sangat cocok untuk produk-produk kesehatan. Tanaman ini tumbuh dengan subur di lahan tropis dan memiliki produktivitas yang stabil. Varietas ini sangat diminati oleh industri farmasi dan makanan kesehatan.',
+                'description' => 'Rosela Herbal Roselindo 4 (Dasar) adalah varietas rosela unggulan yang dikenal karena kandungan antioksidan alaminya yang sangat tinggi.\n\n**Spesifikasi Teknis:**\n- Umur Panen: 95-125 HST\n- Potensi Hasil: 2.0-5.0 ton/ha kelopak basah\n- Rekomendasi Dataran: Rendah–Menengah (mdpl)\n- Ketahanan: Stabil terhadap hama; pemeliharaan saat musim basah untuk mencegah jamur\n- Kualitas: Kelopak merah gelap, kandungan antioksidan tinggi cocok untuk aplikasi farmasi dan makanan kesehatan.',
                 'minimum_stock' => 3,
                 'stock' => 40,
                 'unit' => 'kg',
@@ -421,7 +421,7 @@ class ProductSeeder extends Seeder
             [
                 'product_name' => 'Kenaf KR 6 (Dasar)',
                 'plant_type_id' => 6, 
-                'description' => 'Benih kenaf ini unggul karena menghasilkan serat yang sangat kuat dan panjang, ideal untuk industri kertas, tali, dan tekstil. Tanaman ini tumbuh dengan cepat dan memiliki batang yang kokoh, serta ketahanan yang baik terhadap penyakit. Kenaf KR 6 (Dasar) juga dikenal karena kemudahannya dalam budidaya dan adaptasi yang baik di berbagai jenis tanah.',
+                'description' => 'Benih kenaf ini unggul karena menghasilkan serat yang sangat kuat dan panjang, ideal untuk industri kertas, tali, dan tekstil.\n\n**Spesifikasi Teknis:**\n- Umur Panen: 120-150 HST\n- Potensi Hasil: 12-20 ton/ha biomassa (serat bersih 2.5-5.0 ton/ha)\n- Rekomendasi Dataran: Rendah–Menengah (mdpl)\n- Ketahanan: Tahan terhadap banyak penyakit batang; perhatikan pengendalian hama pemakan daun saat umur muda\n- Kualitas: Serat panjang dan kuat; ideal untuk kertas dan bahan komposit.',
                 'minimum_stock' => 3,
                 'stock' => 40,
                 'unit' => 'kg',
@@ -434,7 +434,7 @@ class ProductSeeder extends Seeder
             [
                 'product_name' => 'Kenaf KR 9 (Dasar)',
                 'plant_type_id' => 6, 
-                'description' => 'Kenaf KR 9 (Dasar) adalah varietas kenaf yang dikenal karena produktivitasnya yang sangat tinggi. Benih kenaf ini sangat unggul untuk perkebunan. Tanaman ini menghasilkan serat yang tebal dan kuat, ideal untuk bahan baku pembuatan kertas dan bahan bangunan. Kenaf KR 9 (Dasar) tumbuh cepat, mudah dibudidayakan, dan memiliki ketahanan yang baik terhadap hama. Varietas ini sangat menguntungkan bagi petani.',
+                'description' => 'Kenaf KR 9 (Dasar) adalah varietas kenaf yang dikenal karena produktivitasnya yang sangat tinggi.\n\n**Spesifikasi Teknis:**\n- Umur Panen: 110-140 HST\n- Potensi Hasil: 14-22 ton/ha biomassa (serat 3.0-6.0 ton/ha)\n- Rekomendasi Dataran: Rendah–Menengah (mdpl)\n- Ketahanan: Baik terhadap hama umum; perawatan minimal pada lahan subur\n- Kualitas: Serat tebal dan kuat cocok untuk aplikasi industri berat.',
                 'minimum_stock' => 3,
                 'stock' => 40,
                 'unit' => 'kg',
@@ -447,7 +447,7 @@ class ProductSeeder extends Seeder
             [
                 'product_name' => 'Kenaf KR 14 (Dasar)',
                 'plant_type_id' => 6, 
-                'description' => 'Benih kenaf ini dikenal karena menghasilkan serat dengan kualitas premium dan daya tahan yang luar biasa. Sangat cocok untuk industri tekstil dan bahan komposit. Tanaman ini tumbuh dengan kokoh dan memiliki produktivitas yang stabil. Selain itu, varietas ini memiliki ketahanan yang baik terhadap penyakit, menjadikannya pilihan yang andal untuk petani.',
+                'description' => 'Benih kenaf ini dikenal karena menghasilkan serat dengan kualitas premium dan daya tahan yang luar biasa.\n\n**Spesifikasi Teknis:**\n- Umur Panen: 120-150 HST\n- Potensi Hasil: 10-18 ton/ha biomassa (serat 2.5-5.0 ton/ha)\n- Rekomendasi Dataran: Rendah–Menengah (mdpl)\n- Ketahanan: Baik terhadap penyakit batang dan jamur; cocok untuk rotasi tanaman\n- Kualitas: Serat premium panjang dan tahan, sesuai untuk tekstil dan komposit.',
                 'minimum_stock' => 3,
                 'stock' => 40,
                 'unit' => 'kg',
@@ -460,7 +460,7 @@ class ProductSeeder extends Seeder
             [
                 'product_name' => 'Jarak Kepyar ASB 175 Agribun (Dasar)',
                 'plant_type_id' => 10, 
-                'description' => 'Benih jarak ini dikenal karena menghasilkan biji dengan kandungan minyak yang sangat tinggi, ideal untuk industri biodiesel, pelumas, dan produk kosmetik. Tanaman ini tumbuh dengan cepat, memiliki daya tahan yang baik terhadap kekeringan, dan dapat tumbuh optimal di lahan kering. Produktivitasnya yang tinggi menjadikannya pilihan yang sangat menguntungkan bagi petani.',
+                'description' => 'Benih jarak ini dikenal karena menghasilkan biji dengan kandungan minyak yang sangat tinggi, ideal untuk industri biodiesel, pelumas, dan produk kosmetik.\n\n**Spesifikasi Teknis:**\n- Umur Panen: 120-150 HST\n- Potensi Hasil: 0.8-1.8 ton/ha biji kering\n- Rekomendasi Dataran: Rendah (mdpl), lahan kering dan marginal\n- Ketahanan: Tahan terhadap kekeringan; rentan terhadap hama penyimpanan jika tidak dikeringkan baik\n- Kualitas: Kandungan minyak tinggi (~40-55%); biji cocok untuk biodiesel dan industri kimia.',
                 'minimum_stock' => 3,
                 'stock' => 40,
                 'unit' => 'kg',
