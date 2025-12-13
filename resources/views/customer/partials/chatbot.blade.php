@@ -102,7 +102,7 @@
     .article-card-chatbot {
         display: flex;
         flex-direction: column;
-        margin-top: 8px;
+        margin-bottom: 8px;
         border: 1px solid #e8f5e9;
         border-radius: 12px;
         overflow: hidden;
