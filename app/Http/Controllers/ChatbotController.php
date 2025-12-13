@@ -163,22 +163,23 @@ class ChatbotController extends Controller
             ];
         } elseif ($intent === 'faq') {
             // --- HANDLE FAQ INTENT ---
-            $faqs = [];
-            if ($keyword) {
-                $faqs = $this->queryFaqs($keyword);
-            }
+            // Untuk FAQ, cari berdasarkan pertanyaan user langsung (bukan hanya keyword)
+            $faq = $this->findBestFaqMatch($userMessage, $keyword);
 
-            if (count($faqs) > 0) {
+            if ($faq) {
                 $finalResponse = [
-                    'status' => 'found',
+                    'status' => 'success',
                     'type' => 'faq',
-                    'message' => $aiReply,
-                    'data' => $faqs
+                    'message' => $faq['answer'], // Langsung kembalikan jawaban
+                    'question' => $faq['question'], // Info pertanyaan yang match
+                    'data' => []
                 ];
             } else {
+                // Jika tidak ketemu, return response dengan pesan default
                 $finalResponse = [
-                    'status' => 'not_found',
-                    'message' => "Mohon maaf, saya tidak menemukan informasi terkait. Silakan hubungi customer service kami.",
+                    'status' => 'success',
+                    'type' => 'faq',
+                    'message' => $aiReply ?? "Mohon maaf, saya tidak menemukan informasi spesifik tentang pertanyaan Anda. Silakan hubungi customer service kami melalui WhatsApp atau datang langsung ke Balai BRMP Malang.",
                     'data' => []
                 ];
             }
@@ -250,44 +251,131 @@ class ChatbotController extends Controller
         return response()->json($finalResponse);
     }
 
-    private function queryFaqs($keyword)
+    private function findBestFaqMatch($userMessage, $keyword = null)
     {
+        // Ambil semua FAQ yang aktif
         $faqs = DB::table('faqs')
-            ->select('id', 'question', 'answer', 'category')
+            ->select('id', 'question', 'answer', 'keywords')
             ->where('is_active', true)
-            ->where(function($query) use ($keyword) {
-                $query->where('question', 'LIKE', "%{$keyword}%")
-                      ->orWhere('answer', 'LIKE', "%{$keyword}%")
-                      ->orWhere('keywords', 'LIKE', "%{$keyword}%");
-            })
             ->orderBy('order')
-            ->limit(3) // Max 3 FAQ results
             ->get();
 
-        return $faqs->map(function($item) {
-            // Format category label
-            $categoryLabels = [
-                'order' => 'Pemesanan',
-                'payment' => 'Pembayaran',
-                'delivery' => 'Pengiriman',
-                'about' => 'Tentang BRMP',
-                'general' => 'Umum'
-            ];
+        if ($faqs->isEmpty()) {
+            return null;
+        }
 
-            return [
-                'question' => $item->question,
-                'answer' => $item->answer,
-                'category' => $categoryLabels[$item->category] ?? 'Informasi'
-            ];
+        // Normalisasi pesan user - hapus punctuation
+        $normalizedMessage = strtolower(trim($userMessage));
+        $normalizedMessage = preg_replace('/[^\w\s]/u', '', $normalizedMessage); // Remove punctuation
+        $messageWords = preg_split('/\s+/', $normalizedMessage);
+        // Filter kata pendek dan common words
+        $messageWords = array_filter($messageWords, function($word) {
+            return strlen($word) >= 3 && !in_array($word, ['yang', 'untuk', 'dari', 'dengan', 'pada', 'ini', 'itu']);
         });
+
+        $bestMatch = null;
+        $highestScore = 0;
+
+        foreach ($faqs as $faq) {
+            $score = 0;
+            $normalizedQuestion = strtolower($faq->question);
+            $normalizedKeywords = strtolower($faq->keywords ?? '');
+            
+            // Split keywords (comma-separated)
+            $faqKeywords = array_map('trim', explode(',', $normalizedKeywords));
+            
+            // Cek 1: Exact match dengan pertanyaan (highest priority)
+            if (str_contains($normalizedMessage, $normalizedQuestion) || 
+                str_contains($normalizedQuestion, $normalizedMessage)) {
+                $score += 100;
+            }
+            
+            // Cek 2: Multi-word phrase match dari keywords (high priority)
+            foreach ($faqKeywords as $faqKeyword) {
+                // Match untuk phrase panjang
+                if (strlen($faqKeyword) > 5 && str_contains($normalizedMessage, $faqKeyword)) {
+                    $score += 40; // Bonus untuk phrase match (e.g., "jam buka")
+                }
+                // Match untuk keyword individual yang spesifik (lebih prioritas)
+                else if (in_array($faqKeyword, $messageWords, true)) {
+                    $score += 35; // Bonus sangat tinggi untuk exact word match
+                }
+            }
+            
+            // Cek 3: Keyword dari LLM (medium-high priority)
+            if ($keyword) {
+                $normalizedKeyword = strtolower($keyword);
+                $normalizedKeyword = preg_replace('/[^\w\s]/u', '', $normalizedKeyword);
+                foreach ($faqKeywords as $faqKeyword) {
+                    if (str_contains($faqKeyword, $normalizedKeyword) || 
+                        str_contains($normalizedKeyword, $faqKeyword)) {
+                        $score += 20;
+                    }
+                }
+                
+                if (str_contains($normalizedQuestion, $normalizedKeyword)) {
+                    $score += 15;
+                }
+            }
+            
+            // Cek 4: Match kata per kata dari user message
+            $wordMatchCount = 0;
+            foreach ($messageWords as $word) {
+                $foundInKeywords = false;
+                $foundInQuestion = false;
+                
+                foreach ($faqKeywords as $faqKeyword) {
+                    if (str_contains($faqKeyword, $word) || str_contains($word, $faqKeyword)) {
+                        $foundInKeywords = true;
+                        break;
+                    }
+                }
+                
+                if (str_contains($normalizedQuestion, $word)) {
+                    $foundInQuestion = true;
+                }
+                
+                if ($foundInKeywords) {
+                    $score += 10;
+                    $wordMatchCount++;
+                }
+                if ($foundInQuestion) {
+                    $score += 5;
+                    $wordMatchCount++;
+                }
+            }
+            
+            // Bonus jika banyak kata yang match (relevance boost)
+            if ($wordMatchCount >= 2) {
+                $score += $wordMatchCount * 3;
+            }
+
+            // Update best match
+            if ($score > $highestScore) {
+                $highestScore = $score;
+                $bestMatch = $faq;
+            }
+        }
+
+        // Threshold minimum score untuk dianggap match
+        if ($highestScore >= 15) {
+            return [
+                'question' => $bestMatch->question,
+                'answer' => $bestMatch->answer
+            ];
+        }
+
+        return null;
     }
 
     private function queryArticles($keyword)
     {
+        $keyword = strtolower(trim($keyword));
+        
         $articles = DB::table('articles')
             ->select('id', 'headline', 'body', 'image', 'created_at')
-            ->where('headline', 'LIKE', "%{$keyword}%")
-            ->orWhere('body', 'LIKE', "%{$keyword}%")
+            ->whereRaw('LOWER(headline) LIKE ?', ["%{$keyword}%"])
+            ->orWhereRaw('LOWER(body) LIKE ?', ["%{$keyword}%"])
             ->orderBy('created_at', 'DESC')
             ->limit(5)
             ->get();
@@ -320,14 +408,142 @@ class ChatbotController extends Controller
 
     private function queryProducts($keyword)
     {
-        $products = DB::table('products')
+        $keyword = strtolower(trim($keyword));
+        
+        // Normalize synonyms for altitude/location queries
+        $altitudeSynonyms = [
+            'pegunungan' => 'tinggi',
+            'gunung' => 'tinggi',
+            'dataran tinggi' => 'tinggi',
+            'highland' => 'tinggi',
+            'daerah tinggi' => 'tinggi',
+            'tempat tinggi' => 'tinggi',
+            'perbukitan' => 'menengah',
+            'bukit' => 'menengah',
+            'dataran menengah' => 'menengah',
+            'daerah menengah' => 'menengah',
+            'tempat menengah' => 'menengah',
+            'dataran rendah' => 'rendah',
+            'lowland' => 'rendah',
+            'pantai' => 'rendah',
+            'pesisir' => 'rendah',
+            'daerah rendah' => 'rendah',
+            'lahan basah' => 'rendah',
+        ];
+        
+        // Replace synonyms with normalized terms
+        foreach ($altitudeSynonyms as $synonym => $normalized) {
+            if (str_contains($keyword, $synonym)) {
+                $keyword = str_replace($synonym, 'dataran ' . $normalized, $keyword);
+            }
+        }
+        
+        $keywordParts = explode(' ', $keyword);
+        
+        // Get all matching products first
+        $allProducts = DB::table('products')
             ->join('plant_types', 'products.plant_type_id', '=', 'plant_types.plant_type_id')
-            ->select('products.product_id', 'products.product_name', 'products.price_per_unit', 'products.stock', 'products.image1')
-            ->where('products.product_name', 'LIKE', "%{$keyword}%")
-            ->orWhere('plant_types.plant_type_name', 'LIKE', "%{$keyword}%")
-            ->orWhere('plant_types.comodity', 'LIKE', "%{$keyword}%")
-            ->limit(5)
+            ->select('products.product_id', 'products.product_name', 'products.price_per_unit', 'products.stock', 'products.image1', 'products.description')
+            ->where(function($q) use ($keyword, $keywordParts) {
+                // Match product name
+                $q->whereRaw('LOWER(products.product_name) LIKE ?', ["%{$keyword}%"])
+                  // Match plant type
+                  ->orWhereRaw('LOWER(plant_types.plant_type_name) LIKE ?', ["%{$keyword}%"])
+                  ->orWhereRaw('LOWER(plant_types.comodity) LIKE ?', ["%{$keyword}%"]);
+                
+                // Match description parts
+                foreach ($keywordParts as $part) {
+                    if (strlen($part) > 2) {
+                        $q->orWhereRaw('LOWER(products.description) LIKE ?', ["%{$part}%"]);
+                    }
+                }
+            })
             ->get();
+        
+        // Score and rank products based on relevance
+        $scoredProducts = $allProducts->map(function($product) use ($keyword, $keywordParts) {
+            $score = 0;
+            $lowerName = strtolower($product->product_name);
+            $lowerDesc = strtolower($product->description ?? '');
+            
+            // Exact phrase match in name (highest priority)
+            if (str_contains($lowerName, $keyword)) {
+                $score += 100;
+            }
+            
+            // Check for specific technical criteria matches
+            // Deteksi pertanyaan dataran (tinggi/rendah/menengah)
+            if (in_array('dataran', $keywordParts)) {
+                // Extract ONLY the value after "Rekomendasi Dataran:" until the first newline/dash
+                // Match format: "Rekomendasi Dataran: Menengah–Tinggi (mdpl)" or "Rekomendasi Dataran: Rendah (mdpl)"
+                if (preg_match('/rekomendasi\s+dataran[:\s]*([^\n-]+)(?:\n|-)/i', $lowerDesc, $matches)) {
+                    $dataranValue = trim($matches[1]);
+                    
+                    // Check if user asked for specific altitude and product matches
+                    if (in_array('tinggi', $keywordParts)) {
+                        // Match only if "tinggi" appears in the Rekomendasi Dataran value
+                        if (str_contains($dataranValue, 'tinggi')) {
+                            $score += 200; // Very high score for correct dataran match
+                        } else {
+                            // Penalize products that don't match the altitude requirement
+                            $score -= 50;
+                        }
+                    }
+                    
+                    if (in_array('rendah', $keywordParts)) {
+                        // Match only if "rendah" appears in the Rekomendasi Dataran value
+                        if (str_contains($dataranValue, 'rendah')) {
+                            $score += 200;
+                        } else {
+                            $score -= 50;
+                        }
+                    }
+                    
+                    if (in_array('menengah', $keywordParts)) {
+                        // Match only if "menengah" appears in the Rekomendasi Dataran value
+                        if (str_contains($dataranValue, 'menengah')) {
+                            $score += 200;
+                        } else {
+                            $score -= 50;
+                        }
+                    }
+                }
+            }
+            
+            // Match all individual keywords in description
+            $matchCount = 0;
+            foreach ($keywordParts as $part) {
+                if (strlen($part) > 2 && str_contains($lowerDesc, $part)) {
+                    $matchCount++;
+                    $score += 10;
+                }
+                if (strlen($part) > 2 && str_contains($lowerName, $part)) {
+                    $score += 15;
+                }
+            }
+            
+            // Bonus for matching multiple keywords
+            if ($matchCount >= 2) {
+                $score += 20;
+            }
+            
+            $product->relevance_score = $score;
+            return $product;
+        });
+        
+        // Filter out products with very low scores and sort by score
+        // Set minimum threshold based on whether dataran criteria is specified
+        $hasDataranCriteria = in_array('dataran', $keywordParts) && 
+                              (in_array('tinggi', $keywordParts) || in_array('rendah', $keywordParts) || in_array('menengah', $keywordParts));
+        $minScore = $hasDataranCriteria ? 100 : 0; // Higher threshold when dataran criteria specified
+        
+        $products = $scoredProducts
+            ->filter(function($product) use ($minScore) {
+                return $product->relevance_score >= $minScore;
+            })
+            ->sortByDesc('relevance_score')
+            ->take(5)
+            ->values(); // Reset keys to sequential array for JSON encoding
 
         // MAPPING DATA AGAR KONSISTEN DENGAN JS
         return $products->map(function($item) {
@@ -367,27 +583,105 @@ class ChatbotController extends Controller
         $sanitizedMessage = preg_replace('/[^a-zA-Z0-9\s]/', '', $originalMessage);
         $sanitizedMessage = trim(substr($sanitizedMessage, 0, 100));
         
-        // Try products first
-        $products = $this->queryProducts($sanitizedMessage);
+        // Extended stopwords termasuk common filler words
+        $stopWords = [
+            'bagaimana', 'gimana', 'cara', 'yang', 'untuk', 'dari', 'dengan', 'pada', 'ini', 'itu',
+            'apa', 'kapan', 'dimana', 'kenapa', 'apakah', 'benar', 'baik', 'ada', 'bisa', 'harus',
+            'berikan', 'tolong', 'minta', 'rekomendasi', 'saya', 'mohon', 'bantu', 'please',
+            'dan', 'atau', 'juga', 'sangat', 'sekali'
+        ];
         
-        if (count($products) > 0) {
-            return response()->json([
-                'status' => 'found',
-                'type' => 'product',
-                'message' => "Berikut produk yang ditemukan:",
-                'data' => $products
-            ]);
+        $words = explode(' ', strtolower($sanitizedMessage));
+        $keywords = array_filter($words, function($word) use ($stopWords) {
+            return strlen($word) > 2 && !in_array($word, $stopWords);
+        });
+
+        // Prioritaskan kata paling panjang agar domain keyword terambil (misal: tembakau, dataran, tinggi)
+        usort($keywords, function($a, $b) {
+            return strlen($b) <=> strlen($a);
+        });
+        
+        // Identifikasi jenis pertanyaan berdasarkan keywords
+        $technicalKeywords = ['dataran', 'tinggi', 'rendah', 'menengah', 'umur', 'hasil', 'mdpl', 'hst', 'ton', 'potensi', 'ketahanan', 'nikotin', 'aroma', 'rasa', 'tekstur', 'serat'];
+        $hasTechnical = count(array_intersect($keywords, $technicalKeywords)) > 0;
+        
+        // Deteksi pertanyaan tutorial/cara
+        $isTutorial = str_contains($sanitizedMessage, 'cara') || str_contains($sanitizedMessage, 'budidaya') || 
+                      str_contains($sanitizedMessage, 'tanam') || str_contains($sanitizedMessage, 'panduan');
+        
+        // Build search keyword: ambil top 3 meaningful keywords
+        $searchKeyword = !empty($keywords) ? implode(' ', array_slice($keywords, 0, 3)) : $sanitizedMessage;
+        
+        // --- STRATEGY: Conditional Search Path ---
+        
+        // Jika pertanyaan tutorial → prioritas artikel
+        if ($isTutorial) {
+            $articles = $this->queryArticles($searchKeyword);
+            if (count($articles) > 0) {
+                return response()->json([
+                    'status' => 'found',
+                    'type' => 'article',
+                    'message' => "Berikut artikel yang ditemukan:",
+                    'data' => $articles
+                ]);
+            }
+            
+            // Fallback ke produk jika artikel tidak ketemu
+            $products = $this->queryProducts($searchKeyword);
+            if (count($products) > 0) {
+                return response()->json([
+                    'status' => 'found',
+                    'type' => 'product',
+                    'message' => "Berikut produk yang ditemukan:",
+                    'data' => $products
+                ]);
+            }
+        } else {
+            // Jika pertanyaan spesifikasi teknis → prioritas produk (karena description lengkap)
+            if ($hasTechnical) {
+                $products = $this->queryProducts($searchKeyword);
+                if (count($products) > 0) {
+                    return response()->json([
+                        'status' => 'found',
+                        'type' => 'product',
+                        'message' => "Berikut produk yang sesuai dengan kriteria Anda:",
+                        'data' => $products
+                    ]);
+                }
+            }
+            
+            // Default: coba produk dulu
+            $products = $this->queryProducts($searchKeyword);
+            if (count($products) > 0) {
+                return response()->json([
+                    'status' => 'found',
+                    'type' => 'product',
+                    'message' => "Berikut produk yang ditemukan:",
+                    'data' => $products
+                ]);
+            }
+            
+            // Coba artikel
+            $articles = $this->queryArticles($searchKeyword);
+            if (count($articles) > 0) {
+                return response()->json([
+                    'status' => 'found',
+                    'type' => 'article',
+                    'message' => "Berikut artikel yang ditemukan:",
+                    'data' => $articles
+                ]);
+            }
         }
-        
-        // If no products, try articles
-        $articles = $this->queryArticles($sanitizedMessage);
-        
-        if (count($articles) > 0) {
+
+        // Coba FAQ sebagai fallback terakhir
+        $faq = $this->findBestFaqMatch($originalMessage, $searchKeyword);
+        if ($faq) {
             return response()->json([
-                'status' => 'found',
-                'type' => 'article',
-                'message' => "Berikut artikel yang ditemukan:",
-                'data' => $articles
+                'status' => 'success',
+                'type' => 'faq',
+                'message' => $faq['answer'],
+                'question' => $faq['question'],
+                'data' => []
             ]);
         }
         

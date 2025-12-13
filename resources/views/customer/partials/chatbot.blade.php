@@ -61,7 +61,7 @@
     .product-card-chatbot {
         display: flex;
         align-items: flex-start;
-        margin-top: 8px;
+        margin-bottom: 8px;
         border: 1px solid #eee;
         border-radius: 8px;
         padding: 8px;
@@ -245,45 +245,56 @@
             }
 
             // Handle bot response
-            if (data.status === 'found') {
+            if (data.status === 'found' || data.status === 'success') {
                 addMessage('bot', data.message);
 
-                // Determine if it's article or product
-                const isArticle = data.type === 'article';
+                // FAQ question display removed - showing only the answer
+                // if (data.type === 'faq' && data.question) {
+                //     const faqInfo = document.createElement('div');
+                //     faqInfo.className = 'chatbot-message bot';
+                //     faqInfo.innerHTML =
+                //         `<div class="message" style="font-size: 0.85em; opacity: 0.8; font-style: italic;">📌 ${data.question}</div>`;
+                //     chatContent.appendChild(faqInfo);
+                // }
 
-                // Render data items
-                data.data.forEach(item => {
-                    if (isArticle) {
-                        // Render Article Card
-                        const articleCard = document.createElement('div');
-                        articleCard.className = 'article-card-chatbot';
+                // Render data items (products/articles)
+                if (data.data && data.data.length > 0) {
+                    // Determine if it's article or product
+                    const isArticle = data.type === 'article';
 
-                        articleCard.innerHTML = `
-                            <div class="article-card-chatbot-info">
-                                <div class="article-card-chatbot-title">${item.title}</div>
-                                <div class="article-card-chatbot-excerpt">${item.excerpt}</div>
-                                <div class="article-card-chatbot-date">${item.date}</div>
-                                <a href="${item.link}" class="article-card-chatbot-link">Baca Lengkap</a>
-                            </div>
-                        `;
-                        chatContent.appendChild(articleCard);
-                    } else {
-                        // Render Product Card
-                        const productCard = document.createElement('div');
-                        productCard.className = 'product-card-chatbot';
+                    data.data.forEach(item => {
+                        if (isArticle) {
+                            // Render Article Card
+                            const articleCard = document.createElement('div');
+                            articleCard.className = 'article-card-chatbot';
 
-                        productCard.innerHTML = `
-                            <img src="${item.image_url}" alt="${item.name}">
-                            <div class="product-card-chatbot-info">
-                                <div class="product-card-chatbot-title">${item.name}</div>
-                                <div class="product-card-chatbot-price">${item.price}</div>
-                                <small class="text-muted">Stok: ${item.stock}</small> <br>
-                                <a href="${item.link}" class="btn btn-sm btn-outline-success mt-1" style="padding: 1px 6px; font-size: 0.7rem;">Lihat Detail</a>
-                            </div>
-                        `;
-                        chatContent.appendChild(productCard);
-                    }
-                });
+                            articleCard.innerHTML = `
+                                <div class="article-card-chatbot-info">
+                                    <div class="article-card-chatbot-title">${item.title}</div>
+                                    <div class="article-card-chatbot-excerpt">${item.excerpt}</div>
+                                    <div class="article-card-chatbot-date">${item.date}</div>
+                                    <a href="${item.link}" class="article-card-chatbot-link">Baca Lengkap</a>
+                                </div>
+                            `;
+                            chatContent.appendChild(articleCard);
+                        } else {
+                            // Render Product Card
+                            const productCard = document.createElement('div');
+                            productCard.className = 'product-card-chatbot';
+
+                            productCard.innerHTML = `
+                                <img src="${item.image_url}" alt="${item.name}">
+                                <div class="product-card-chatbot-info">
+                                    <div class="product-card-chatbot-title">${item.name}</div>
+                                    <div class="product-card-chatbot-price">${item.price}</div>
+                                    <small class="text-muted">Stok: ${item.stock}</small> <br>
+                                    <a href="${item.link}" class="btn btn-sm btn-outline-success mt-1" style="padding: 1px 6px; font-size: 0.7rem;">Lihat Detail</a>
+                                </div>
+                            `;
+                            chatContent.appendChild(productCard);
+                        }
+                    });
+                }
 
             } else {
                 addMessage('bot', data.message);

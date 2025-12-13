@@ -80,14 +80,14 @@ class FaqSeeder extends Seeder
                 'question' => 'Apa itu BRMP Malang?',
                 'answer' => "BRMP (Balai Penelitian dan Pengembangan Tanaman Pangan) Malang adalah lembaga pemerintah yang fokus pada penelitian dan pengembangan benih tanaman pangan berkualitas. Kami menyediakan benih unggul hasil riset untuk mendukung pertanian Indonesia yang lebih produktif.",
                 'category' => 'about',
-                'keywords' => 'brmp,balai,tentang,profil,siapa',
+                'keywords' => 'tentang,profil,siapa,lembaga,penelitian,pengembangan',
                 'order' => 9,
             ],
             [
                 'question' => 'Dimana lokasi Balai BRMP Malang?',
                 'answer' => "Balai BRMP Malang berlokasi di:\nJl. Raya Karangploso KM 4, Malang, Jawa Timur\n\nJam operasional:\nSenin - Jumat: 08.00 - 16.00 WIB\nSabtu: 08.00 - 12.00 WIB\nMinggu & Libur Nasional: Tutup\n\nAnda bisa mengunjungi kami langsung untuk konsultasi atau pembelian benih.",
                 'category' => 'about',
-                'keywords' => 'lokasi,alamat,dimana,jam buka,buka',
+                'keywords' => 'lokasi,alamat,dimana,jam buka,buka,kapan,jam operasional,jam berapa,balai brmp malang',
                 'order' => 10,
             ],
             [
