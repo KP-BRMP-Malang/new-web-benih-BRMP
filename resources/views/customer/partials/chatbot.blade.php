@@ -196,6 +196,13 @@
     const chatInput = document.getElementById('chatInput');
     const chatContent = document.getElementById('chatContent');
 
+    // Session ID for chat continuity (stored in localStorage)
+    let sessionId = localStorage.getItem('chatbot_session_id');
+    if (!sessionId) {
+        sessionId = 'session_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+        localStorage.setItem('chatbot_session_id', sessionId);
+    }
+
     // Toggle chatbot window
     chatbotBtn.addEventListener('click', () => {
         chatbotWindow.style.display = chatbotWindow.style.display === 'none' ? 'block' : 'none';
@@ -225,15 +232,17 @@
         chatContent.appendChild(typingIndicator);
         chatContent.scrollTop = chatContent.scrollHeight;
 
-        // Send message to backend
+        // Send message to new chatbot API
         try {
-            const response = await fetch('{{ route('chatbot.ask') }}', {
+            const response = await fetch('/api/chat', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    'Accept': 'application/json',
                     'X-CSRF-TOKEN': '{{ csrf_token() }}',
                 },
                 body: JSON.stringify({
+                    session_id: sessionId,
                     message: userMessage
                 }),
             });
@@ -244,63 +253,74 @@
                 chatContent.removeChild(typingIndicator);
             }
 
-            // Handle bot response
-            if (data.status === 'found' || data.status === 'success') {
+            // Handle bot response based on new API format
+            // Status: found, not_found, need_clarification, out_of_scope, success, error
+            if (data.status === 'found' || data.status === 'success' || data.status ===
+                'need_clarification') {
                 addMessage('bot', data.message);
 
-                // FAQ question display removed - showing only the answer
-                // if (data.type === 'faq' && data.question) {
-                //     const faqInfo = document.createElement('div');
-                //     faqInfo.className = 'chatbot-message bot';
-                //     faqInfo.innerHTML =
-                //         `<div class="message" style="font-size: 0.85em; opacity: 0.8; font-style: italic;">📌 ${data.question}</div>`;
-                //     chatContent.appendChild(faqInfo);
-                // }
-
-                // Render data items (products/articles)
+                // Render data items based on type
                 if (data.data && data.data.length > 0) {
-                    // Determine if it's article or product
-                    const isArticle = data.type === 'article';
-
                     data.data.forEach(item => {
-                        if (isArticle) {
-                            // Render Article Card
+                        // Check item type from API response - prioritize explicit type field
+                        if (item.type === 'faq' || item.question !== undefined) {
+                            // FAQ item: type, id, question, answer, link (null)
+                            const faqCard = document.createElement('div');
+                            faqCard.className = 'chatbot-message bot';
+                            faqCard.innerHTML = `
+                                <div class="message" style="background: #e8f5e9; border-left: 3px solid #388E3C;">
+                                    <strong>❓ ${item.question || item.title}</strong><br>
+                                    <span style="color: #555;">${item.answer || item.summary}</span>
+                                </div>
+                            `;
+                            chatContent.appendChild(faqCard);
+                        } else if (item.type === 'product') {
+                            // Product item: type, id, title, price, stock, unit, summary, link
+                            const productCard = document.createElement('div');
+                            productCard.className = 'product-card-chatbot';
+
+                            const formattedPrice = new Intl.NumberFormat('id-ID', {
+                                style: 'currency',
+                                currency: 'IDR',
+                                minimumFractionDigits: 0
+                            }).format(item.price);
+
+                            productCard.innerHTML = `
+                                <div class="product-card-chatbot-info" style="width: 100%;">
+                                    <div class="product-card-chatbot-title">${item.title}</div>
+                                    <div class="product-card-chatbot-price">${formattedPrice}/${item.unit}</div>
+                                    <small class="text-muted">Stok: ${item.stock} ${item.unit}</small>
+                                    ${item.summary ? `<div style="font-size: 0.8rem; color: #666; margin-top: 4px;">${item.summary.substring(0, 100)}...</div>` : ''}
+                                    ${item.link ? `<a href="${item.link}" class="btn btn-sm btn-outline-success mt-1" style="padding: 1px 6px; font-size: 0.7rem;">Lihat Detail</a>` : ''}
+                                </div>
+                            `;
+                            chatContent.appendChild(productCard);
+                        } else if (item.type === 'article' || (item.title !== undefined && item
+                                .link)) {
+                            // Article item: type, id, title, summary, link (must have link)
                             const articleCard = document.createElement('div');
                             articleCard.className = 'article-card-chatbot';
 
                             articleCard.innerHTML = `
                                 <div class="article-card-chatbot-info">
-                                    <div class="article-card-chatbot-title">${item.title}</div>
-                                    <div class="article-card-chatbot-excerpt">${item.excerpt}</div>
-                                    <div class="article-card-chatbot-date">${item.date}</div>
+                                    <div class="article-card-chatbot-title">📰 ${item.title}</div>
+                                    <div class="article-card-chatbot-excerpt">${item.summary || ''}</div>
                                     <a href="${item.link}" class="article-card-chatbot-link">Baca Lengkap</a>
                                 </div>
                             `;
                             chatContent.appendChild(articleCard);
-                        } else {
-                            // Render Product Card
-                            const productCard = document.createElement('div');
-                            productCard.className = 'product-card-chatbot';
-
-                            productCard.innerHTML = `
-                                <img src="${item.image_url}" alt="${item.name}">
-                                <div class="product-card-chatbot-info">
-                                    <div class="product-card-chatbot-title">${item.name}</div>
-                                    <div class="product-card-chatbot-price">${item.price}</div>
-                                    <small class="text-muted">Stok: ${item.stock}</small> <br>
-                                    <a href="${item.link}" class="btn btn-sm btn-outline-success mt-1" style="padding: 1px 6px; font-size: 0.7rem;">Lihat Detail</a>
-                                </div>
-                            `;
-                            chatContent.appendChild(productCard);
                         }
                     });
                 }
-
-            } else {
+            } else if (data.status === 'not_found' || data.status === 'out_of_scope') {
                 addMessage('bot', data.message);
+            } else if (data.status === 'error') {
+                addMessage('bot', data.message || 'Maaf, terjadi kesalahan. Silakan coba lagi.');
+            } else {
+                addMessage('bot', data.message || 'Maaf, saya tidak mengerti. Silakan coba lagi.');
             }
         } catch (error) {
-            console.error('Error:', error);
+            console.error('Chatbot Error:', error);
             if (typingIndicator.parentNode) chatContent.removeChild(typingIndicator);
             addMessage('bot', 'Maaf, terjadi kesalahan koneksi. Silakan coba lagi.');
         }
@@ -313,8 +333,23 @@
     function addMessage(sender, text) {
         const messageDiv = document.createElement('div');
         messageDiv.className = `chatbot-message ${sender}`;
-        messageDiv.innerHTML = `<div class="message">${text}</div>`;
+
+        // Format text: convert newlines to <br> and **text** to <strong>
+        let formattedText = text
+            .replace(/\n/g, '<br>') // Convert newlines to <br>
+            .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>') // Convert **bold** to <strong>
+            .replace(/\*(.+?)\*/g, '<em>$1</em>'); // Convert *italic* to <em>
+
+        messageDiv.innerHTML = `<div class="message">${formattedText}</div>`;
         chatContent.appendChild(messageDiv);
         chatContent.scrollTop = chatContent.scrollHeight;
+    }
+
+    // Clear session (optional - for debugging)
+    function clearChatSession() {
+        localStorage.removeItem('chatbot_session_id');
+        sessionId = 'session_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+        localStorage.setItem('chatbot_session_id', sessionId);
+        chatContent.innerHTML = '';
     }
 </script>
