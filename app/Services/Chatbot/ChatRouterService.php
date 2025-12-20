@@ -30,10 +30,19 @@ class ChatRouterService
      */
     public function route(string $userMessage, array $conversationHistory = []): RouterOutput
     {
+        // Generate cache key based on message and history
+        $cacheKey = 'chat_router:' . md5($userMessage . serialize($conversationHistory));
+        
+        // Try to get from cache first
+        if ($cached = \Illuminate\Support\Facades\Cache::get($cacheKey)) {
+            Log::debug('Router result retrieved from cache', ['key' => $cacheKey]);
+            return $cached;
+        }
+
         $prompt = $this->buildRouterPrompt($userMessage, $conversationHistory);
         
-        // Retry up to 2 times for transient errors
-        $maxRetries = 2;
+        // Retry up to 3 times for transient errors
+        $maxRetries = 3;
         $lastException = null;
 
         for ($attempt = 1; $attempt <= $maxRetries; $attempt++) {
@@ -45,31 +54,49 @@ class ChatRouterService
 
                 Log::debug('Router LLM output', ['result' => $result, 'message' => $userMessage]);
 
-                return $this->parseRouterResult($result);
+                $output = $this->parseRouterResult($result);
+
+                // Cache successful result for 60 minutes
+                if ($output->intent !== 'error') {
+                    \Illuminate\Support\Facades\Cache::put($cacheKey, $output, 60 * 60);
+                }
+
+                return $output;
             } catch (\Exception $e) {
                 $lastException = $e;
                 $errorMessage = $e->getMessage();
                 
                 // Don't retry rate limit errors
                 if (str_contains($errorMessage, 'rate limit') || str_contains($errorMessage, '429')) {
-                    Log::error('Router LLM rate limit', ['error' => $errorMessage, 'message' => $userMessage]);
+                    $isDailyLimit = str_contains($errorMessage, 'Resource has been exhausted') || str_contains($errorMessage, 'quota');
+                    
+                    Log::error($isDailyLimit ? 'Router LLM daily quota exhausted' : 'Router LLM rate limit hit', [
+                        'error' => $errorMessage,
+                        'message' => $userMessage
+                    ]);
+
                     return new RouterOutput(
                         intent: 'error',
                         filters: [],
                         sources: [],
                         confidence: 0.0,
-                        clarificationNeeded: 'Maaf, sistem sedang sibuk karena banyak permintaan. Silakan tunggu 1 menit dan coba lagi.'
+                        clarificationNeeded: $isDailyLimit 
+                            ? 'Maaf, kuota harian sistem telah habis. Silakan coba lagi besok.' 
+                            : 'Maaf, sistem sedang sibuk karena banyak permintaan. Silakan tunggu 1 menit dan coba lagi.'
                     );
                 }
                 
-                // Log and retry for invalid JSON (truncated response)
-                if (str_contains($errorMessage, 'invalid JSON') && $attempt < $maxRetries) {
-                    Log::warning('Router LLM invalid JSON, retrying', [
+                // Log and retry for invalid JSON (truncated response) or other transient errors
+                if ($attempt < $maxRetries) {
+                    Log::warning('Router LLM error, retrying', [
                         'attempt' => $attempt,
                         'error' => $errorMessage,
                         'message' => $userMessage,
                     ]);
-                    usleep(500000); // Wait 500ms before retry
+                    
+                    // Backoff: Wait 1 second before retry (for invalid JSON or connection blips)
+                    // If it was invalid JSON, maybe 500ms was enough, but 1s is safer for general errors too
+                    sleep(1); 
                     continue;
                 }
                 

@@ -15,11 +15,11 @@
         </div>
         <div class="mb-3">
             <label>Gambar</label>
-            @if($article->image)
-                <div class="mb-2">
-                    <img src="{{ asset('storage/'.$article->image) }}" width="120">
-                </div>
-            @endif
+                    @if($article->image)
+                        <div class="mb-2">
+                            <img src="{{ asset('storage/articles/'.$article->image) }}" width="120">
+                        </div>
+                    @endif
             <input type="file" name="image" class="form-control">
         </div>
         <div class="mb-3">

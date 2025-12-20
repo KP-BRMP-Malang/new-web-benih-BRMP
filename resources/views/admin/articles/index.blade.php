@@ -24,7 +24,7 @@
                 <td>{{ $a->headline }}</td>
                 <td>
                     @if($a->image)
-                        <img src="{{ asset('storage/'.$a->image) }}" width="60">
+                        <img src="{{ asset('storage/articles/'.$a->image) }}" width="60">
                     @endif
                 </td>
                 <td>{{ $a->created_at->format('d-m-Y') }}</td>

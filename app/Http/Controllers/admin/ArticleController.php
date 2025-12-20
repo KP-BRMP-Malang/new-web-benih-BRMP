@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Article;
 
+use Illuminate\Support\Facades\Storage;
+
 class ArticleController extends Controller
 {
     /**
@@ -37,7 +39,8 @@ class ArticleController extends Controller
         ]);
 
         if ($request->hasFile('image')) {
-            $validated['image'] = $request->file('image')->store('articles', 'public');
+            $path = $request->file('image')->store('articles', 'public');
+            $validated['image'] = basename($path);
         }
 
         Article::create($validated);
@@ -73,7 +76,13 @@ class ArticleController extends Controller
         ]);
 
         if ($request->hasFile('image')) {
-            $validated['image'] = $request->file('image')->store('articles', 'public');
+            // Delete old image
+            if ($article->image) {
+                Storage::disk('public')->delete('articles/' . basename($article->image));
+            }
+
+            $path = $request->file('image')->store('articles', 'public');
+            $validated['image'] = basename($path);
         }
 
         $article->update($validated);
@@ -85,6 +94,10 @@ class ArticleController extends Controller
      */
     public function destroy(Article $article)
     {
+        if ($article->image) {
+            Storage::disk('public')->delete('articles/' . basename($article->image));
+        }
+        
         $article->delete();
         return redirect()->route('admin.articles.index')->with('success', 'Artikel berhasil dihapus.');
     }

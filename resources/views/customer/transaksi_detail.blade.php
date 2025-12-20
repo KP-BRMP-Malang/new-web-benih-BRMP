@@ -617,8 +617,8 @@
                             @endif
                         </div>
                         <div class="product-actions">
-                            <button href="{{ route('produk.detail', $item->product->product_id) }}"
-                                class="btn-green w-100 py-1" onclick="event.stopPropagation();">
+                            <button
+                                class="btn-green w-100 py-1" onclick="event.stopPropagation(); window.location.href='{{ route('produk.detail', $item->product->product_id) }}'">
                                 Beli Lagi
                             </button>
                         </div>
@@ -720,16 +720,26 @@
                         </a>
                     </div>
                 @endif
+                @if($latestPayment->payment_status == 'rejected')
                  <div class="no-payment">
                     <strong>Alasan Penolakan:</strong><br>
                     {!! nl2br($latestPayment->rejection_reason) !!}
                 </div>
+                @endif
             @elseif(!$hasPayments && !$hasKodeBilling)
                 <div class="no-payment">
                     ⚠️ Belum ada pembayaran untuk transaksi ini. Silakan tunggu kode billing dari admin.
                 </div>
             @elseif($rejectedPayments)
-               
+                <div class="no-payment">
+                    <div class="mb-2">
+                         <span class="payment-status" style="background: linear-gradient(135deg, #fecaca, #fca5a5); color: #dc2626; border: 2px solid #dc2626;">
+                            TRANSAKSI DIBATALKAN
+                        </span>
+                    </div>
+                    <strong>Alasan Pembatalan:</strong><br>
+                    {!! nl2br($latestPayment->rejection_reason) !!}
+                </div>
             @endif
             @if ($showBillingForm || $showOngkirForm)
                 <div class="payment-instructions">

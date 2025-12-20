@@ -64,7 +64,7 @@ class AdminDashboardController extends Controller
             ->join('plant_types as pt', 'p.plant_type_id', '=', 'pt.plant_type_id')
             ->join('reg_provinces as rp', 't.province_id', '=', 'rp.id')
             ->whereNotNull('t.province_id')
-            ->where('t.order_status', '!=', 'dibatalkan');
+            ->where('t.order_status', 'selesai');
 
         // Apply filters
         if ($selectedProvince) {
@@ -96,7 +96,7 @@ class AdminDashboardController extends Controller
             ->join('plant_types as pt', 'p.plant_type_id', '=', 'pt.plant_type_id')
             ->join('reg_provinces as rp', 't.province_id', '=', 'rp.id')
             ->whereNotNull('t.province_id')
-            ->where('t.order_status', '!=', 'dibatalkan');
+            ->where('t.order_status', 'selesai');
 
         // Apply filters untuk province products
         if ($selectedProvince) {
@@ -131,7 +131,7 @@ class AdminDashboardController extends Controller
             ->join('plant_types as pt', 'p.plant_type_id', '=', 'pt.plant_type_id')
             ->join('reg_regencies as rr', 't.regency_id', '=', 'rr.id')
             ->whereNotNull('t.regency_id')
-            ->where('t.order_status', '!=', 'dibatalkan');
+            ->where('t.order_status', 'selesai');
 
         // Apply filters untuk regency data
         if ($selectedProvince) {
@@ -163,7 +163,7 @@ class AdminDashboardController extends Controller
             ->join('plant_types as pt', 'p.plant_type_id', '=', 'pt.plant_type_id')
             ->join('reg_regencies as rr', 't.regency_id', '=', 'rr.id')
             ->whereNotNull('t.regency_id')
-            ->where('t.order_status', '!=', 'dibatalkan');
+            ->where('t.order_status', 'selesai');
 
         // Apply filters untuk regency products
         if ($selectedProvince) {

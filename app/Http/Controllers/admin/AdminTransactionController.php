@@ -69,6 +69,17 @@ class AdminTransactionController extends Controller
             $trx->done_date = null;
         }
 
+        if ($newStatus === 'dibatalkan' && $trx->order_status !== 'dibatalkan') {
+            // Kembalikan stok produk jika dibatalkan
+            foreach ($trx->transactionItems as $item) {
+                $product = $item->product;
+                if ($product) {
+                    $product->stock += $item->quantity;
+                    $product->save();
+                }
+            }
+        }
+
         $trx->order_status = $newStatus;
         $trx->save();
         
@@ -138,6 +149,15 @@ class AdminTransactionController extends Controller
             // Update transaction status to dibatalkan
             $transaction->order_status = 'dibatalkan';
             $transaction->save();
+            
+            // Kembalikan stok produk
+             foreach ($transaction->transactionItems as $item) {
+                $product = $item->product;
+                if ($product) {
+                    $product->stock += $item->quantity;
+                    $product->save();
+                }
+            }
             
             return redirect()->back()->with('success', 'Pembayaran ditolak.');
         } catch (\Exception $e) {

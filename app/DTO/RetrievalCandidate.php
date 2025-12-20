@@ -50,6 +50,7 @@ class RetrievalCandidate implements JsonSerializable
             extra: [
                 'minimum_purchase' => $product->minimum_purchase ?? null,
                 'plant_type_id' => $product->plant_type_id ?? null,
+                'plant_type_name' => $product->plantType->name ?? $product->plant_type_name ?? 'Lainnya',
             ],
         );
     }

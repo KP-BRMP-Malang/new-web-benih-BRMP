@@ -40,7 +40,67 @@
                                                 </tr>
                                                 <tr>
                                                     <td><strong>Deskripsi:</strong></td>
-                                                    <td>{{ $product->description }}</td>
+                                                    <td>
+                                                        @php
+                                                            if (!function_exists('renderProductDescriptionAdmin')) {
+                                                                function renderProductDescriptionAdmin($text)
+                                                                {
+                                                                    if (is_null($text) || $text === '') {
+                                                                        return '';
+                                                                    }
+                                                                    $text = str_replace('\\n', "\n", $text);
+                                                                    $text = str_replace("\r\n", "\n", $text);
+                                                                    $text = e($text);
+                                                                    $text = preg_replace('/\*\*(.+?)\*\*/s', '<strong>$1</strong>', $text);
+                                            
+                                                                    $lines = explode("\n", $text);
+                                                                    $html = '';
+                                                                    $inList = false;
+                                                                    $paraBuffer = [];
+                                            
+                                                                    $flushParagraph = function () use (&$paraBuffer, &$html) {
+                                                                        if (count($paraBuffer) > 0) {
+                                                                            $p = implode(' ', $paraBuffer);
+                                                                            $html .= '<p>' . $p . '</p>';
+                                                                            $paraBuffer = [];
+                                                                        }
+                                                                    };
+                                            
+                                                                    foreach ($lines as $rawLine) {
+                                                                        $line = trim($rawLine);
+                                                                        if ($line === '') {
+                                                                            if ($inList) {
+                                                                                $html .= '</ul>';
+                                                                                $inList = false;
+                                                                            }
+                                                                            $flushParagraph();
+                                                                            continue;
+                                                                        }
+                                                                        if (preg_match('/^[\-\*]\s+(.*)$/', $line, $m)) {
+                                                                            $flushParagraph();
+                                                                            if (!$inList) {
+                                                                                $html .= '<ul>';
+                                                                                $inList = true;
+                                                                            }
+                                                                            $html .= '<li>' . $m[1] . '</li>';
+                                                                            continue;
+                                                                        }
+                                                                        if ($inList) {
+                                                                            $html .= '</ul>';
+                                                                            $inList = false;
+                                                                        }
+                                                                        $paraBuffer[] = $line;
+                                                                    }
+                                                                    if ($inList) {
+                                                                        $html .= '</ul>';
+                                                                    }
+                                                                    $flushParagraph();
+                                                                    return $html;
+                                                                }
+                                                            }
+                                                        @endphp
+                                                        {!! renderProductDescriptionAdmin($product->description) !!}
+                                                    </td>
                                                 </tr>
                                                 <tr>
                                                     <td><strong>Stok:</strong></td>

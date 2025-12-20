@@ -68,7 +68,7 @@
                                         <div class="mb-3">
                                             <label for="description" class="form-label">Deskripsi *</label>
                                             <textarea class="form-control @error('description') is-invalid @enderror" id="description" name="description"
-                                                rows="4" required>{{ old('description', $product->description) }}</textarea>
+                                                rows="4">{{ str_replace('\\n', "\n", old('description', $product->description)) }}</textarea>
                                             @error('description')
                                                 <div class="invalid-feedback">{{ $message }}</div>
                                             @enderror
@@ -303,3 +303,23 @@
         </div>
     </div>
 @endsection
+
+@push('styles')
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/simplemde@1.11.2/dist/simplemde.min.css">
+<style>
+    .CodeMirror {
+        min-height: 200px;
+    }
+</style>
+@endpush
+
+@push('scripts')
+<script src="https://cdn.jsdelivr.net/npm/simplemde@1.11.2/dist/simplemde.min.js"></script>
+<script>
+    var simplemde = new SimpleMDE({ 
+        element: document.getElementById("description"),
+        spellChecker: false,
+        status: false,
+    });
+</script>
+@endpush

@@ -102,26 +102,109 @@ class ChatComposerService
         array $candidates,
         array $conversationHistory
     ): ChatResponse {
-        $prompt = $this->buildComposerPrompt($userMessage, $routerOutput, $candidates, $conversationHistory);
+        $summaryContext = null;
 
-        try {
-            $result = $this->llmClient->generateJson($prompt, [
-                'temperature' => 0.7,
-                'max_tokens' => 1024,
-            ]);
+        // Special handling for large number of products: Summarize and sample
+        if (count($candidates) > 5 && $this->determineType($candidates) === ChatResponse::TYPE_PRODUCT) {
+            $totalFound = count($candidates);
+            
+            // Calculate counts by plant type
+            $counts = [];
+            $productsByType = [];
+            foreach ($candidates as $candidate) {
+                $typeName = $candidate->extra['plant_type_name'] ?? 'Lainnya';
+                $counts[$typeName] = ($counts[$typeName] ?? 0) + 1;
+                $productsByType[$typeName][] = $candidate;
+            }
 
-            Log::debug('Composer output', ['result' => $result]);
+            // Build summary context string
+            $details = [];
+            foreach ($counts as $type => $count) {
+                $details[] = "{$type}: {$count}";
+            }
+            $detailsStr = implode(', ', $details);
+            $summaryContext = "Ditemukan total {$totalFound} produk ({$detailsStr}). Berikut 5 contoh diantaranya:";
 
-            return $this->parseComposerOutput($result, $candidates);
-        } catch (\Exception $e) {
-            Log::error('Composer LLM error', [
-                'error' => $e->getMessage(),
-                'message' => $userMessage,
-            ]);
-
-            // Fallback: return candidates without LLM composition
-            return $this->fallbackResponse($candidates);
+            // Select 5 distinct samples
+            $selectedCandidates = [];
+            $limit = 5;
+            
+            // Round-robin selection to ensure diversity
+            while (count($selectedCandidates) < $limit && !empty($productsByType)) {
+                $types = array_keys($productsByType);
+                $madeSelection = false;
+                
+                foreach ($types as $type) {
+                    if (empty($productsByType[$type])) {
+                        unset($productsByType[$type]);
+                        continue;
+                    }
+                    
+                    if (count($selectedCandidates) < $limit) {
+                        $selectedCandidates[] = array_shift($productsByType[$type]);
+                        $madeSelection = true;
+                    }
+                }
+                
+                if (!$madeSelection) break;
+            }
+            
+            // Use only selected candidates for the prompt to save tokens
+            $candidates = $selectedCandidates;
         }
+
+        $prompt = $this->buildComposerPrompt($userMessage, $routerOutput, $candidates, $conversationHistory, $summaryContext);
+
+        // Cache key based on prompt hash
+        $cacheKey = 'chat_composer:' . md5($prompt);
+        
+        if ($cached = \Illuminate\Support\Facades\Cache::get($cacheKey)) {
+            Log::debug('Composer result retrieved from cache', ['key' => $cacheKey]);
+            return $cached;
+        }
+
+        // Retry logic
+        $maxRetries = 3;
+        
+        for ($attempt = 1; $attempt <= $maxRetries; $attempt++) {
+            try {
+                $result = $this->llmClient->generateJson($prompt, [
+                    'temperature' => 0.7,
+                    'max_tokens' => 1024,
+                ]);
+
+                Log::debug('Composer output', ['result' => $result]);
+
+                $response = $this->parseComposerOutput($result, $candidates);
+                
+                // Cache successful response (60 minutes)
+                \Illuminate\Support\Facades\Cache::put($cacheKey, $response, 60 * 60);
+                
+                return $response;
+            } catch (\Exception $e) {
+                $errorMessage = $e->getMessage();
+                
+                // Don't retry if it's a critical error (like safety block or non-transient)
+                // But for "server busy" or "timeout", we should retry
+                
+                if ($attempt < $maxRetries) {
+                    Log::warning('Composer LLM error, retrying', [
+                        'attempt' => $attempt,
+                        'error' => $errorMessage,
+                    ]);
+                    sleep(1); // Backoff 1s
+                    continue;
+                }
+                
+                Log::error('Composer LLM failed after retries', [
+                    'error' => $errorMessage,
+                    'message' => $userMessage,
+                ]);
+            }
+        }
+
+        // Fallback: return candidates without LLM composition
+        return $this->fallbackResponse($candidates);
     }
 
     /**
@@ -131,7 +214,8 @@ class ChatComposerService
         string $userMessage,
         RouterOutput $routerOutput,
         array $candidates,
-        array $conversationHistory
+        array $conversationHistory,
+        ?string $summaryContext = null
     ): string {
         $candidatesJson = json_encode(
             array_map(fn($c) => $c->jsonSerialize(), $candidates),
@@ -148,19 +232,27 @@ class ChatComposerService
             $contextSection .= "\n";
         }
 
+        $summarySection = '';
+        if ($summaryContext) {
+            $summarySection = "\nRINGKASAN HASIL PENCARIAN:\n{$summaryContext}\n";
+        }
+
         return <<<PROMPT
 Kamu adalah asisten penjualan untuk toko benih tanaman. Tugasmu adalah merangkai jawaban yang informatif dan helpful berdasarkan data kandidat yang diberikan.
 
 ATURAN PENTING:
-1. JANGAN mengarang harga, stok, atau detail produk - gunakan HANYA data dari kandidat
-2. JANGAN membuat link sendiri - gunakan link yang sudah ada di data kandidat
-3. Jawab dalam bahasa Indonesia yang ramah dan profesional
-4. Jika kandidat kosong atau tidak relevan, akui bahwa tidak menemukan data
-5. Untuk produk, selalu sebutkan harga dan ketersediaan stok
-6. Untuk artikel, berikan ringkasan singkat dan ajak user membaca selengkapnya
-7. Sertakan link untuk setiap item yang direkomendasi
+1. Berikan pengantar yang ramah dan menarik sebelum melist produk (JANGAN langsung list)
+2. Jika ada Ringkasan Hasil Pencarian, gunakan informasinya untuk menjelaskan cakupan produk yang ditemukan
+3. JANGAN membuat/mengarang link baru - gunakan HANYA link dari data kandidat
+4. JANGAN mengarang harga, stok, atau fakta yang tidak ada di data
+5. Jawab dalam bahasa Indonesia yang ramah dan profesional
+6. Untuk produk, selalu sebutkan harga dan ketersediaan stok
+7. Untuk artikel, berikan ringkasan singkat dan ajak user membaca selengkapnya
+8. Sertakan link untuk setiap item yang direkomendasi
+9. Jaga respons tetap ringkas dan padat. Hindari penjelasan yang bertele-tele (maks 200 kata kecuali diminta detail).
 
 {$contextSection}
+{$summarySection}
 USER MESSAGE: {$userMessage}
 
 INTENT: {$routerOutput->intent}

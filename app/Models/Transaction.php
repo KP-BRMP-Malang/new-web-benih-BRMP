@@ -82,9 +82,9 @@ class Transaction extends Model
             return 'Menunggu Pembayaran';
         }
 
-        // If payment is rejected, show "Pembayaran Ditolak"
+        // If payment is rejected, show "Transaksi Dibatalkan"
         if ($payment && $payment->payment_status === 'rejected') {
-            return 'Pembayaran Ditolak';
+            return 'Transaksi Dibatalkan';
         }
 
         // If payment is pending, show order status

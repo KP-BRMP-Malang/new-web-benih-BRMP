@@ -31,9 +31,9 @@ class CancelExpiredTransactions extends Command
         try {
             $this->info('Starting to check for expired transactions...');
             
-            // Get transactions that are waiting for payment and have expired (1 week after order)
+            // Get transactions that are waiting for payment and have expired (1 week after updated_at)
             $expiredTransactions = Transaction::where('order_status', 'menunggu_pembayaran')
-            ->where('order_date', '<=', Carbon::now()->subWeek())
+            ->where('updated_at', '<=', Carbon::now()->subWeek())
             ->get();
             
             $cancelledCount = 0;
@@ -62,12 +62,22 @@ class CancelExpiredTransactions extends Command
                             'rejection_reason' => "Mohon maaf, transaksi Anda dengan nomor transaksi #{$transaction->transaction_id} telah dibatalkan secara otomatis karena sudah melewati batas waktu pembayaran.\n\nAnda dapat membuat pesanan baru untuk melanjutkan pembelian.\n\nTerima kasih."
                         ]);
 
+                    // Kembalikan stok produk
+                    foreach ($transaction->transactionItems as $item) {
+                        $product = $item->product;
+                        if ($product) {
+                            $product->stock += $item->quantity;
+                            $product->save();
+                        }
+                    }
+
                     $cancelledCount++;
 
                     Log::info('Transaction cancelled due to expired payment (payment status: no_payment)', [
                         'transaction_id' => $transaction->transaction_id,
                         'user_id' => $transaction->user_id,
                         'order_date' => $transaction->order_date,
+                        'updated_at' => $transaction->updated_at,
                         'cancelled_at' => Carbon::now()
                     ]);
 
