@@ -39,10 +39,14 @@ RUN mkdir -p storage/framework/cache/data \
     storage/framework/views \
     storage/logs \
     storage/app/public/products \
+    storage/app/public/articles \
     bootstrap/cache
 
 # Copy product images to storage (flatten all subdirectories)
 RUN find public/images/Foto\ Produk -type f \( -name "*.jpeg" -o -name "*.jpg" -o -name "*.png" \) -exec cp {} storage/app/public/products/ \; 2>/dev/null || true
+
+# Copy article images to storage
+RUN cp public/images/*.png storage/app/public/articles/ 2>/dev/null || true
 
 # Create SQLite database
 RUN touch /tmp/database.sqlite
