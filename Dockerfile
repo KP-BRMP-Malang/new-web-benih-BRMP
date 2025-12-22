@@ -49,5 +49,11 @@ RUN chmod -R 775 storage bootstrap/cache
 # Expose port
 EXPOSE 8080
 
+# Create startup script
+RUN echo '#!/bin/sh\n\
+php artisan migrate:fresh --seed --force\n\
+php artisan serve --host=0.0.0.0 --port=$PORT\n\
+' > /var/www/start.sh && chmod +x /var/www/start.sh
+
 # Start application
-CMD php artisan serve --host=0.0.0.0 --port=$PORT
+CMD ["/bin/sh", "/var/www/start.sh"]
