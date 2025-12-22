@@ -1,0 +1,11 @@
+node_modules/
+.git/
+tests/
+storage/logs/
+storage/framework/cache/
+storage/framework/sessions/
+storage/framework/testing/
+storage/framework/views/
+.env
+*.log
+.DS_Store
