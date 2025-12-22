@@ -38,10 +38,17 @@ RUN mkdir -p storage/framework/cache/data \
     storage/framework/sessions \
     storage/framework/views \
     storage/logs \
+    storage/app/public/products \
     bootstrap/cache
+
+# Copy product images to storage
+RUN cp -r public/images/Foto\ Produk/* storage/app/public/products/ 2>/dev/null || true
 
 # Create SQLite database
 RUN touch /tmp/database.sqlite
+
+# Create storage link
+RUN ln -s /var/www/storage/app/public /var/www/public/storage || true
 
 # Set permissions
 RUN chmod -R 775 storage bootstrap/cache
