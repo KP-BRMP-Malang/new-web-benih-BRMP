@@ -40,6 +40,9 @@ RUN mkdir -p storage/framework/cache/data \
     storage/logs \
     bootstrap/cache
 
+# Create SQLite database
+RUN touch /tmp/database.sqlite
+
 # Set permissions
 RUN chmod -R 775 storage bootstrap/cache
 
