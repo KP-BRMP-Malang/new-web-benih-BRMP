@@ -45,8 +45,8 @@ RUN mkdir -p storage/framework/cache/data \
 # Copy product images to storage (flatten all subdirectories)
 RUN find public/images/Foto\ Produk -type f \( -name "*.jpeg" -o -name "*.jpg" -o -name "*.png" \) -exec cp {} storage/app/public/products/ \; 2>/dev/null || true
 
-# Copy article images to storage
-RUN cp public/images/*.png storage/app/public/articles/ 2>/dev/null || true
+# Copy article images to storage (all PNG and WEBP files in public/images root)
+RUN find public/images -maxdepth 1 -type f \( -name "*.png" -o -name "*.webp" \) -exec cp {} storage/app/public/articles/ \; 2>/dev/null || true
 
 # Create SQLite database
 RUN touch /tmp/database.sqlite
