@@ -38,18 +38,30 @@ if (app()->environment('local')) {
 // ADMIN COMMAND ROUTES
 // =====================
 Route::get('/admin/commands/migrate', function() {
-    \Illuminate\Support\Facades\Artisan::call('migrate', ['--force' => true]);
-    return '<pre>' . \Illuminate\Support\Facades\Artisan::output() . '</pre>';
+    try {
+        \Illuminate\Support\Facades\Artisan::call('migrate', ['--force' => true]);
+        return '<pre>' . \Illuminate\Support\Facades\Artisan::output() . '</pre>';
+    } catch (\Exception $e) {
+        return '<pre>ERROR: ' . $e->getMessage() . "\n\n" . $e->getTraceAsString() . '</pre>';
+    }
 });
 
 Route::get('/admin/commands/seed', function() {
-    \Illuminate\Support\Facades\Artisan::call('db:seed', ['--force' => true]);
-    return '<pre>' . \Illuminate\Support\Facades\Artisan::output() . '</pre>';
+    try {
+        \Illuminate\Support\Facades\Artisan::call('db:seed', ['--force' => true]);
+        return '<pre>' . \Illuminate\Support\Facades\Artisan::output() . '</pre>';
+    } catch (\Exception $e) {
+        return '<pre>ERROR: ' . $e->getMessage() . "\n\n" . $e->getTraceAsString() . '</pre>';
+    }
 });
 
 Route::get('/admin/commands/migrate-fresh-seed', function() {
-    \Illuminate\Support\Facades\Artisan::call('migrate:fresh', ['--seed' => true, '--force' => true]);
-    return '<pre>' . \Illuminate\Support\Facades\Artisan::output() . '</pre>';
+    try {
+        \Illuminate\Support\Facades\Artisan::call('migrate:fresh', ['--seed' => true, '--force' => true]);
+        return '<pre>' . \Illuminate\Support\Facades\Artisan::output() . '</pre>';
+    } catch (\Exception $e) {
+        return '<pre>ERROR: ' . $e->getMessage() . "\n\n" . $e->getTraceAsString() . '</pre>';
+    }
 });
 
 Route::get('/admin/commands/list-transactions', function() {
