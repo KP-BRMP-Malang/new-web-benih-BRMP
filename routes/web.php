@@ -35,6 +35,39 @@ if (app()->environment('local')) {
 }
 
 // =====================
+// ADMIN COMMAND ROUTES
+// =====================
+Route::get('/admin/commands/migrate', function() {
+    \Illuminate\Support\Facades\Artisan::call('migrate', ['--force' => true]);
+    return '<pre>' . \Illuminate\Support\Facades\Artisan::output() . '</pre>';
+});
+
+Route::get('/admin/commands/seed', function() {
+    \Illuminate\Support\Facades\Artisan::call('db:seed', ['--force' => true]);
+    return '<pre>' . \Illuminate\Support\Facades\Artisan::output() . '</pre>';
+});
+
+Route::get('/admin/commands/migrate-fresh-seed', function() {
+    \Illuminate\Support\Facades\Artisan::call('migrate:fresh', ['--seed' => true, '--force' => true]);
+    return '<pre>' . \Illuminate\Support\Facades\Artisan::output() . '</pre>';
+});
+
+Route::get('/admin/commands/list-transactions', function() {
+    \Illuminate\Support\Facades\Artisan::call('transactions:list');
+    return '<pre>' . \Illuminate\Support\Facades\Artisan::output() . '</pre>';
+});
+
+Route::get('/admin/commands/update-pending-dates/{days?}', function($days = 7) {
+    \Illuminate\Support\Facades\Artisan::call('transactions:update-pending-dates', ['days' => $days]);
+    return '<pre>' . \Illuminate\Support\Facades\Artisan::output() . '</pre>';
+});
+
+Route::get('/admin/commands/cancel-expired', function() {
+    \Illuminate\Support\Facades\Artisan::call('transactions:cancel-expired');
+    return '<pre>' . \Illuminate\Support\Facades\Artisan::output() . '</pre>';
+});
+
+// =====================
 // ARTICLE ROUTES
 // =====================
 Route::get('/artikel', [ArticleController::class, 'index'])->name('articles.index');
