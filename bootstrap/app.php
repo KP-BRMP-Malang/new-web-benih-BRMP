@@ -13,6 +13,9 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
+        // Trust proxies for deployment behind reverse proxy (Railway, etc)
+        $middleware->trustProxies(at: '*');
+        
         // Route middleware alias
         $middleware->alias([
             'auth' => \App\Http\Middleware\Authenticate::class,

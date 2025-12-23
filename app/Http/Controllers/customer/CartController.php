@@ -96,18 +96,33 @@ class CartController extends Controller
         ]);
     }
 
-   public function deleteItem($cart_item)
-{
-    try {
-        $item = CartItem::findOrFail($cart_item);
-        $item->delete();
-        // Kembalikan respons JSON sukses
-        return response()->json(['success' => true]);
-    } catch (\Exception $e) {
-        // Tangani jika item tidak ditemukan atau ada error lain
-        return response()->json(['success' => false, 'message' => 'Gagal menghapus item.'], 500);
+    public function deleteItem($cart_item)
+    {
+        try {
+            // Pastikan user sudah login
+            if (!Auth::check()) {
+                return response()->json(['success' => false, 'message' => 'Unauthorized'], 401);
+            }
+
+            $user = Auth::user();
+            $item = CartItem::findOrFail($cart_item);
+            
+            // Pastikan item milik user yang login
+            $cart = Cart::where('cart_id', $item->cart_id)
+                        ->where('user_id', $user->user_id)
+                        ->first();
+            
+            if (!$cart) {
+                return response()->json(['success' => false, 'message' => 'Unauthorized'], 403);
+            }
+            
+            $item->delete();
+            return response()->json(['success' => true]);
+        } catch (\Exception $e) {
+            \Log::error('Error deleting cart item: ' . $e->getMessage());
+            return response()->json(['success' => false, 'message' => 'Gagal menghapus item.'], 500);
+        }
     }
-}
 
     public function updateQuantity(Request $request, $cart_item)
     {
