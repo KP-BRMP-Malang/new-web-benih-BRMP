@@ -196,9 +196,8 @@ class GeminiClient implements LlmClientInterface
             'maxOutputTokens' => $options['max_tokens'] ?? 1024,
         ];
 
-        if (isset($options['response_mime_type'])) {
-            $config['responseMimeType'] = $options['response_mime_type'];
-        }
+        // responseMimeType is not supported in v1 API, only in v1beta
+        // Removed to maintain compatibility with v1 endpoint
 
         return $config;
     }
