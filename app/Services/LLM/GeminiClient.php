@@ -20,8 +20,8 @@ class GeminiClient implements LlmClientInterface
     public function __construct()
     {
         $this->apiKey = config('services.gemini.api_key');
-        $this->model = config('services.gemini.model', 'gemini-1.5-flash');
-        $this->baseUrl = config('services.gemini.base_url', 'https://generativelanguage.googleapis.com/v1beta');
+        $this->model = config('services.gemini.model', 'gemini-1.5-flash-latest');
+        $this->baseUrl = config('services.gemini.base_url', 'https://generativelanguage.googleapis.com/v1');
         $this->timeout = config('services.gemini.timeout', 30);
 
         if (empty($this->apiKey)) {
