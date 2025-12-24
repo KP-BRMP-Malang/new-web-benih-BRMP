@@ -82,6 +82,10 @@ class ChatComposerService
                 'Sampai jumpa! Terima kasih sudah berkunjung.',
                 'Selamat berbelanja! Jika ada pertanyaan lagi, saya siap membantu.',
             ],
+            'chat' => [
+                'Halo! Saya adalah asisten BRMP untuk membantu Anda. Saya bisa membantu mencari produk benih, memberikan tips budidaya, atau menjawab pertanyaan seputar toko kami. Ada yang bisa saya bantu?',
+                'Hai! Senang bertemu dengan Anda. Saya siap membantu pertanyaan seputar produk benih, artikel budidaya, dan informasi toko kami. Apa yang ingin Anda ketahui?',
+            ],
             'general_chat' => [
                 'Saya adalah asisten virtual untuk toko benih. Saya bisa membantu Anda mencari produk, memberikan informasi budidaya, atau menjawab pertanyaan seputar toko.',
             ],
@@ -165,6 +169,7 @@ class ChatComposerService
 
         // Retry logic
         $maxRetries = 3;
+        $lastException = null;
         
         for ($attempt = 1; $attempt <= $maxRetries; $attempt++) {
             try {
@@ -182,11 +187,26 @@ class ChatComposerService
                 
                 return $response;
             } catch (\Exception $e) {
+                $lastException = $e;
                 $errorMessage = $e->getMessage();
                 
-                // Don't retry if it's a critical error (like safety block or non-transient)
-                // But for "server busy" or "timeout", we should retry
+                // Check if it's a rate limit error - don't retry, return error message
+                if (str_contains($errorMessage, 'rate limit') || str_contains($errorMessage, '429')) {
+                    $isDailyLimit = str_contains($errorMessage, 'Resource has been exhausted') || str_contains($errorMessage, 'quota');
+                    
+                    Log::error($isDailyLimit ? 'Composer LLM daily quota exhausted' : 'Composer LLM rate limit hit', [
+                        'error' => $errorMessage,
+                        'message' => $userMessage,
+                    ]);
+
+                    return ChatResponse::needClarification(
+                        $isDailyLimit 
+                            ? 'Maaf, kuota harian sistem telah habis. Silakan coba lagi besok.' 
+                            : 'Maaf, sistem sedang sibuk karena banyak permintaan. Silakan tunggu 1 menit dan coba lagi.'
+                    );
+                }
                 
+                // For other errors, retry
                 if ($attempt < $maxRetries) {
                     Log::warning('Composer LLM error, retrying', [
                         'attempt' => $attempt,

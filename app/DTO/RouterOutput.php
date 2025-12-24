@@ -52,7 +52,7 @@ class RouterOutput implements JsonSerializable
      */
     public function isGeneralChat(): bool
     {
-        return in_array($this->intent, ['greeting', 'thanks', 'general_chat', 'farewell']);
+        return in_array($this->intent, ['greeting', 'thanks', 'general_chat', 'chat', 'farewell']);
     }
 
     public function jsonSerialize(): array

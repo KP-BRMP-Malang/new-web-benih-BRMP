@@ -20,8 +20,8 @@ class GeminiClient implements LlmClientInterface
     public function __construct()
     {
         $this->apiKey = config('services.gemini.api_key');
-        $this->model = config('services.gemini.model', 'gemini-1.5-flash');
-        $this->baseUrl = config('services.gemini.base_url', 'https://generativelanguage.googleapis.com/v1');
+        $this->model = config('services.gemini.model', 'gemini-2.5-flash-lite');
+        $this->baseUrl = config('services.gemini.base_url', 'https://generativelanguage.googleapis.com/v1beta');
         $this->timeout = config('services.gemini.timeout', 30);
 
         if (empty($this->apiKey)) {
@@ -80,8 +80,8 @@ class GeminiClient implements LlmClientInterface
         // Add JSON instruction to prompt
         $jsonPrompt = $prompt . "\n\nIMPORTANT: Respond ONLY with valid JSON. No markdown, no code blocks, no explanation.";
 
-        // Set generation config for JSON output
-        $options['response_mime_type'] = 'application/json';
+        // Note: responseMimeType is not supported in v1beta API
+        // We rely on the prompt instruction for JSON formatting
 
         $result = $this->generate($jsonPrompt, $options);
         $content = $result['content'];
