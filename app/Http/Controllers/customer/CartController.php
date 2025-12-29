@@ -50,7 +50,9 @@ class CartController extends Controller
         if (in_array($product->unit, ['Mata', 'Tanaman', 'Rizome'])) {
             $qty = max($product->minimum_purchase, (int) $inputQty);
         } else {
-            $qty = max($product->minimum_purchase, (float) $inputQty);
+            // Batasi 2 angka di belakang koma
+            $inputQty = round((float) $inputQty, 2);
+            $qty = max($product->minimum_purchase, $inputQty);
         }
         
         // Validasi quantity tidak melebihi stok tersedia
@@ -160,7 +162,9 @@ class CartController extends Controller
         if (in_array($satuan, ['mata', 'tanaman', 'rizome'])) {
             $qty = max($minimalPembelian, (int) $inputQty);
         } else {
-            $qty = max($minimalPembelian, (float) $inputQty);
+            // Batasi 2 angka di belakang koma
+            $inputQty = round((float) $inputQty, 2);
+            $qty = max($minimalPembelian, $inputQty);
         }
         
         // Validasi quantity tidak melebihi stok tersedia

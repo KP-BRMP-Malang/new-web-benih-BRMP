@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
+use Illuminate\Validation\Rules\Password;
+
 class ProfileController extends Controller
 {
     public function show()
@@ -80,22 +82,19 @@ class ProfileController extends Controller
             'old_password' => 'required',
             'new_password' => [
                 'required',
-                'min:8',
-                'regex:/[A-Z]/',
-                'regex:/[a-z]/',
-                'regex:/[0-9]/',
-                'regex:/[^A-Za-z0-9]/',
+                Password::min(8)
+                    ->mixedCase()
+                    ->numbers()
+                    ->symbols(),
                 'confirmed',
             ],
         ], [
-            'new_password.min' => 'Password minimal 8 karakter.',
-            'new_password.regex' => 'Password harus mengandung huruf besar, huruf kecil, angka, dan simbol.',
             'new_password.confirmed' => 'Konfirmasi password tidak cocok.',
         ]);
         if (!Hash::check($request->old_password, $user->password)) {
             return back()->withErrors(['old_password' => 'Password lama salah.'])->withInput();
         }
-        $user->password = Hash::make($request->new_password);
+        $user->password = $request->new_password;
         $user->save();
         return back()->with('success', 'Password berhasil diubah!');
     }

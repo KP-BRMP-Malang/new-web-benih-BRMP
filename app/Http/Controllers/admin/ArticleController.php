@@ -34,7 +34,7 @@ class ArticleController extends Controller
     {
         $validated = $request->validate([
             'headline' => 'required|string|max:255',
-            'image' => 'nullable|image|max:2048',
+            'image' => 'nullable|image|max:10240',
             'body' => 'required',
         ]);
 
@@ -71,7 +71,7 @@ class ArticleController extends Controller
     {
         $validated = $request->validate([
             'headline' => 'required|string|max:255',
-            'image' => 'nullable|image|max:2048',
+            'image' => 'nullable|image|max:10240',
             'body' => 'required',
         ]);
 

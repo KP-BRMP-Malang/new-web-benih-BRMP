@@ -166,9 +166,9 @@ class ProductController extends Controller
             'unit' => 'required|string|max:50',
             'price_per_unit' => 'required|numeric|min:0',
             'minimum_purchase' => 'required|numeric|min:0',
-            'image1' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'image2' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'image_certificate' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'image1' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:10240',
+            'image2' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:10240',
+            'image_certificate' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:10240',
             'certificate_number' => 'nullable|string|max:255',
             'certificate_class' => 'nullable|string|max:100',
             'valid_from' => 'nullable|date',
@@ -238,9 +238,9 @@ class ProductController extends Controller
             'unit' => 'required|string|max:50',
             'price_per_unit' => 'required|numeric|min:0',
             'minimum_purchase' => 'required|numeric|min:0',
-            'image1' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'image2' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'image_certificate' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'image1' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:10240',
+            'image2' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:10240',
+            'image_certificate' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:10240',
             'certificate_number' => 'nullable|string|max:255',
             'certificate_class' => 'nullable|string|max:100',
             'valid_from' => 'nullable|date',
@@ -259,19 +259,19 @@ class ProductController extends Controller
         if ($request->hasFile('image1')) {
             // Delete old image if exists
             if ($product->image1) {
-                Storage::disk('public')->delete($product->image1);
+                // Storage::disk('public')->delete($product->image1); // Keep old image for history
             }
             $data['image1'] = $request->file('image1')->store('products', 'public');
         }
         if ($request->hasFile('image2')) {
             if ($product->image2) {
-                Storage::disk('public')->delete($product->image2);
+                // Storage::disk('public')->delete($product->image2); // Keep old image for history
             }
             $data['image2'] = $request->file('image2')->store('products', 'public');
         }
         if ($request->hasFile('image_certificate')) {
             if ($product->image_certificate) {
-                Storage::disk('public')->delete($product->image_certificate);
+                // Storage::disk('public')->delete($product->image_certificate); // Keep old image for history
             }
             $data['image_certificate'] = $request->file('image_certificate')->store('certificates', 'public');
         }

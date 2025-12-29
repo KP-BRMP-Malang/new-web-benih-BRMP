@@ -514,6 +514,17 @@
             </div>
         @endif
 
+        @if ($errors->any())
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <ul class="mb-0">
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        @endif
+
         <button onclick="location.href='{{ route('transaksi') }}'" class="btn-green btn-kembali-transaksi mb-3 px-3"
             style="background:none;color:#4CAF50">
             Kembali ke Daftar Transaksi
@@ -755,15 +766,7 @@
                 <div class="upload-form-title">
                     📤 Upload Bukti Pembayaran
                 </div>
-                @if ($errors->any())
-                    <div class="alert alert-danger">
-                        <ul class="mb-0">
-                            @foreach ($errors->all() as $error)
-                                <li>{{ $error }}</li>
-                            @endforeach
-                        </ul>
-                    </div>
-                @endif
+
                 <div class="upload-form-container">
 
                     {{-- Formulir Unggah Bukti Pembayaran Billing --}}

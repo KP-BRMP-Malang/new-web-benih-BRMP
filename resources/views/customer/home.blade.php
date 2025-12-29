@@ -213,6 +213,7 @@
         }
     </style>
 
+    @if (empty($q))
     <div class="bg-image">
         <div class="container-hero">
             <div class="hero-banner">
@@ -272,6 +273,7 @@
             </div>
         </div>
     </div>
+    @endif
     <div class="container">
         <div class="section" style="margin-bottom:24px;">
             <h2 style="font-weight:bold; margin-bottom:18px;">
@@ -288,12 +290,14 @@
                     @endforeach
                 </div>
 
+                @if (empty($q))
                 <div id="loadMoreContainer" style="text-align:center;margin-top:30px;">
                     <button id="loadMoreBtn" class="btn-LebihBanyak">
                         <i class="fas fa-plus" style="margin-right:8px;"></i>
                         Lebih Banyak
                     </button>
                 </div>
+                @endif
             @else
                 <div style="padding:32px 0;text-align:center;color:#888;font-size:18px;">Produk tidak ditemukan.</div>
             @endif

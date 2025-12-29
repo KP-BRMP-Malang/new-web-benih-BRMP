@@ -86,7 +86,7 @@
         }
 
         .cart-item-qty-input {
-            width: 50px;
+            width: 75px;
             padding: 4px 8px;
             border: 1px solid #e0e0e0;
             border-radius: 4px;
@@ -328,7 +328,50 @@
             }
 
         }
+
+        #notification-container {
+            position: fixed;
+            top: 100px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1000;
+            width: 90%;
+            max-width: 600px;
+            pointer-events: none;
+        }
+
+        .notification {
+            background: #fff;
+            padding: 12px 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            animation: slideDown 0.3s ease-out;
+            pointer-events: auto;
+        }
+
+        .notification.error {
+            border-left: 4px solid #d32f2f;
+            background: #ffebee;
+            color: #d32f2f;
+        }
+
+        .notification.success {
+            border-left: 4px solid #4CAF50;
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+
+        @keyframes slideDown {
+            from { transform: translateY(-20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
     </style>
+    
+    <div id="notification-container"></div>
 
     <div class="container"style="margin-bottom: 40px;">
 
@@ -376,7 +419,7 @@
                         <div class="cart-empty-content">
                             <h5>Wah, keranjang belanjamu kosong</h5>
                             <p>Yuk, isi dengan barang-barang impianmu!</p>
-                            <a href="/" class="btn-green">Mulai Belanja</a>
+                            <button onclick="window.location.href='/'" class="btn-green w-50">Mulai Belanja</button>
                         </div>
                     </div>
                     <!-- Desktop Cart Items -->
@@ -445,7 +488,7 @@
                                                 fa-trash-alt "></i>
                                             </div>
                                             <div class="cart-item-qty">
-                                                <input type="text" id="qtyInput{{ $item->cart_item_id }}"
+                                                <input type="number" step="0.01" id="qtyInput{{ $item->cart_item_id }}"
                                                     name="quantity" value="{{ $item->quantity }}"
                                                     min="{{ $item->product->minimum_purchase }}"
                                                     max="{{ $availableStock }}" class="cart-item-qty-input"
@@ -500,6 +543,26 @@
             } catch (e) {
                 return [];
             }
+        }
+
+        function showNotification(message, type = 'error') {
+            const container = document.getElementById('notification-container');
+            const notif = document.createElement('div');
+            notif.className = `notification ${type}`;
+            notif.innerHTML = `
+                <div style="display:flex;align-items:center;">
+                    <i class="fas ${type === 'error' ? 'fa-exclamation-triangle' : 'fa-check-circle'}" style="margin-right:10px;"></i>
+                    <span>${message}</span>
+                </div>
+            `;
+            container.appendChild(notif);
+            
+            setTimeout(() => {
+                notif.style.opacity = '0';
+                notif.style.transform = 'translateY(-20px)';
+                notif.style.transition = 'all 0.3s ease-out';
+                setTimeout(() => notif.remove(), 300);
+            }, 3000);
         }
 
         function setCheckedCartItems(ids) {
@@ -579,17 +642,36 @@
 
             if (["Mata", "Tanaman", "Rizome"].includes(unit)) {
                 qty = parseInt(val);
+                // Cek max stock
+                if (input.max && qty > parseFloat(input.max)) {
+                    qty = parseFloat(input.max);
+                    input.value = qty;
+                    showNotification('Maaf, stok tidak mencukupi. Maksimal: ' + qty + ' ' + unit, 'error');
+                }
+                
                 if (isNaN(qty) || qty < minimalPembelian) {
                     qty = minimalPembelian;
                     input.value = qty;
-                    alert('Minimal pembelian: ' + minimalPembelian.toLocaleString('id-ID') + ' ' + unit);
+                    showNotification('Minimal pembelian: ' + minimalPembelian.toLocaleString('id-ID') + ' ' + unit, 'error');
                 }
             } else {
                 qty = parseFloat(val);
+                // Batasi 2 angka desimal
+                if (!isNaN(qty)) {
+                    qty = parseFloat(qty.toFixed(2));
+                }
+                
+                // Cek max stock
+                if (input.max && qty > parseFloat(input.max)) {
+                    qty = parseFloat(input.max);
+                    input.value = qty;
+                    showNotification('Maaf, stok tidak mencukupi. Maksimal: ' + qty + ' ' + unit, 'error');
+                }
+                
                 if (isNaN(qty) || qty < minimalPembelian) {
                     qty = minimalPembelian;
                     input.value = qty;
-                    alert('Minimal pembelian: ' + minimalPembelian.toLocaleString('id-ID') + ' ' + unit);
+                    showNotification('Minimal pembelian: ' + minimalPembelian.toLocaleString('id-ID') + ' ' + unit, 'error');
                 }
             }
 
@@ -608,14 +690,14 @@
                         document.getElementById('subtotal' + cartItemId).innerText = data.subtotal;
                         updateSummary();
                     } else {
-                        alert(data.message || 'Terjadi kesalahan saat mengupdate quantity');
+                        showNotification(data.message || 'Terjadi kesalahan saat mengupdate quantity', 'error');
                         input.value = minimalPembelian;
                         updateSummary();
                     }
                 })
                 .catch(error => {
                     console.error('Error:', error);
-                    alert('Terjadi kesalahan saat mengupdate quantity');
+                    showNotification('Terjadi kesalahan saat mengupdate quantity', 'error');
                     input.value = minimalPembelian;
                     updateSummary();
                 });
@@ -626,7 +708,7 @@
 
             let checkedItems = Array.from(document.querySelectorAll('.cart-item-checkbox:checked')).map(cb => cb.value);
             if (checkedItems.length === 0) {
-                alert('Pilih minimal satu barang untuk checkout');
+                showNotification('Pilih minimal satu barang untuk checkout', 'error');
                 return;
             }
 
@@ -686,7 +768,31 @@
             });
 
             const initialItemCount = document.querySelectorAll('.cart-item-checkbox').length;
+
             updatePageVisibility(initialItemCount);
+
+            // Real-time input validation listener
+            document.querySelectorAll('.cart-item-qty-input').forEach(input => {
+                input.addEventListener('input', function() {
+                    let val = this.value;
+                    let max = parseFloat(this.max);
+                    
+                    // Format decimals
+                    if (val.includes('.')) {
+                        let parts = val.split('.');
+                        if (parts[1].length > 2) {
+                            this.value = parseFloat(val).toFixed(2);
+                            val = this.value;
+                        }
+                    }
+                    
+                    // Max stock check
+                    if (max && parseFloat(val) > max) {
+                        this.value = max;
+                        showNotification('Stok tidak mencukupi. Maksimal: ' + max + ' ' + (this.nextElementSibling?.innerText || ''), 'error');
+                    }
+                });
+            });
         });
 
         function updatePageVisibility(itemCount) {
@@ -725,12 +831,12 @@
                         const remainingItems = document.querySelectorAll('.cart-item-checkbox');
                         updatePageVisibility(remainingItems.length);
                     } else {
-                        alert(data.message || 'Gagal menghapus item');
+                        showNotification(data.message || 'Gagal menghapus item', 'error');
                     }
                 })
                 .catch(error => {
                     console.error('Error:', error);
-                    alert('Terjadi kesalahan saat menghapus item');
+                    showNotification('Terjadi kesalahan saat menghapus item', 'error');
                 });
         }
     </script>

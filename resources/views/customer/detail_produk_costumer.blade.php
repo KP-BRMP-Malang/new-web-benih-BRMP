@@ -616,7 +616,7 @@
                                         class="addToCartForm">
                                         @csrf
                                         <div class="product-detail-card-qty">
-                                            <input type="text" class="qtyInput" name="quantity" value=""
+                                            <input type="number" step="0.01" class="qtyInput" name="quantity" value=""
                                                 placeholder="0" min="{{ $product->minimum_purchase }}"
                                                 max="{{ $availableStock }}"
                                                 style="width:60px;text-align:center;background:#fff;">
@@ -660,7 +660,7 @@
                             class="addToCartForm">
                             @csrf
                             <div class="product-detail-card-qty">
-                                <input type="text" class="qtyInput" name="quantity" value="" placeholder="0"
+                                <input type="number" step="0.01" class="qtyInput" name="quantity" value="" placeholder="0"
                                     min="{{ $product->minimum_purchase }}" max="{{ $availableStock }}"
                                     style="width:60px;text-align:center;background:#fff;">
                                 <span style="margin-left:8px;">{{ $product->unit }}</span>
@@ -778,6 +778,24 @@
                     const stockWarning = form.querySelector('.stockWarning');
                     const minPurchaseWarning = form.querySelector('.minPurchaseWarning');
 
+                    // Cegah input lebih dari 2 desimal
+                    qtyInput.addEventListener('input', function(e) {
+                        let val = this.value;
+                        if (val.includes('.')) {
+                            let parts = val.split('.');
+                            if (parts[1].length > 2) {
+                                this.value = parseFloat(val).toFixed(2);
+                            }
+                        }
+
+                        // Cegah input melebihi stok
+                        let maxStock = parseFloat(this.max);
+                        if (parseFloat(val) > maxStock) {
+                            this.value = maxStock;
+                            // Trigger updateSubtotal manually or let the next listener handle it
+                        }
+                    });
+
                     const updateSubtotal = () => {
                         let qty = parseFloat(qtyInput.value.replace(',', '.')) || 0;
                         let harga = {{ $product->price_per_unit }};
@@ -797,6 +815,17 @@
                             }
                             return;
                         }
+
+                        // Jika unit bukan mata/tanaman/rizome, izinkan desimal
+                        if (!['Mata', 'Tanaman', 'Rizome'].includes(unitProduk)) {
+                            // Validasi 2 desimal manual jika perlu, tapi sudah di-handle input event
+                        }
+
+                        let subtotal = qty * harga;
+                        subtotalSpan.innerText = 'Rp' + subtotal.toLocaleString('id-ID', {
+                            minimumFractionDigits: 0,
+                            maximumFractionDigits: 0 // Harga biasanya bulat
+                        });
 
                         let isValid = true;
 
