@@ -1,6 +1,7 @@
 # Cara Perbaiki Chatbot di Deployment
 
 ## Problem
+
 Chatbot sudah berjalan di lokal dengan model `gemini-2.5-flash`, tapi di deployment masih error.
 
 ## Solusi
@@ -12,20 +13,22 @@ Pastikan environment variables berikut sudah di-set dengan nilai yang benar di p
 ```env
 GEMINI_MODEL=gemini-2.5-flash
 GEMINI_BASE_URL=https://generativelanguage.googleapis.com/v1beta
-GEMINI_API_KEY=AIzaSyBL7myvSCG20feo21dMOJ060T-ers_K_x0
+GEMINI_API_KEY= isi sendiri nanti
 GEMINI_TIMEOUT=30
 ```
 
 #### Untuk Railway:
+
 1. Buka dashboard Railway
 2. Pilih project Anda
 3. Klik tab "Variables"
 4. Update atau tambahkan variable:
-   - `GEMINI_MODEL` = `gemini-2.5-flash`
-   - `GEMINI_BASE_URL` = `https://generativelanguage.googleapis.com/v1beta`
-   - Pastikan `GEMINI_API_KEY` sudah terisi
+    - `GEMINI_MODEL` = `gemini-2.5-flash`
+    - `GEMINI_BASE_URL` = `https://generativelanguage.googleapis.com/v1beta`
+    - Pastikan `GEMINI_API_KEY` sudah terisi
 
 #### Untuk Heroku:
+
 ```bash
 heroku config:set GEMINI_MODEL=gemini-2.5-flash
 heroku config:set GEMINI_BASE_URL=https://generativelanguage.googleapis.com/v1beta
@@ -57,9 +60,11 @@ RUN php artisan config:clear && \
 Setelah update environment variables, restart deployment Anda:
 
 #### Railway:
-- Deployment akan otomatis restart setelah update environment variables
+
+-   Deployment akan otomatis restart setelah update environment variables
 
 #### Heroku:
+
 ```bash
 heroku restart
 ```
@@ -77,15 +82,18 @@ Setelah restart, test chatbot dengan mengirim pesan "halo" atau "mau beli tembak
 Jika masih error setelah langkah di atas:
 
 1. **Cek logs deployment**:
-   - Railway: Lihat di tab "Logs"
-   - Heroku: `heroku logs --tail`
+
+    - Railway: Lihat di tab "Logs"
+    - Heroku: `heroku logs --tail`
 
 2. **Pastikan code sudah ter-deploy**:
-   - Commit terakhir: `efce28a - API chatbot fix yang udh bisa running, jangan diganti`
-   - Cek apakah deployment sudah pull commit terbaru
+
+    - Commit terakhir: `efce28a - API chatbot fix yang udh bisa running, jangan diganti`
+    - Cek apakah deployment sudah pull commit terbaru
 
 3. **Cek API Key**:
-   - Pastikan API key yang sama (`AIzaSyBL7myvSCG20feo21dMOJ060T-ers_K_x0`) sudah di-set di deployment
+
+    - Pastikan API key yang sama (`AIzaSyBL7myvSCG20feo21dMOJ060T-ers_K_x0`) sudah di-set di deployment
 
 4. **Rate Limit**:
-   - Jika masih kena rate limit, tunggu 1-2 menit atau gunakan API key yang berbeda untuk deployment
+    - Jika masih kena rate limit, tunggu 1-2 menit atau gunakan API key yang berbeda untuk deployment
