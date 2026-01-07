@@ -19,7 +19,7 @@ class UserSeeder extends Seeder
             User::create([
                 'name' => 'Admin',
                 'email' => 'admin@test.com',
-                'password' => Hash::make('1234'),
+                'password' => Hash::make('Aa123456.'),
                 'phone' => null,
                 'email_verified_at' => now(),
                 'phone_verified_at' => now(),
@@ -31,7 +31,7 @@ class UserSeeder extends Seeder
             User::create([
                 'name' => 'User',
                 'email' => 'user@test.com',
-                'password' => Hash::make('1234'),
+                'password' => Hash::make('Aa123456.'),
                 'phone'=> '0812345678',
                 'email_verified_at' => now(),
                 'phone_verified_at' => now(),
